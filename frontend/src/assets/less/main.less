@@ -1,0 +1,46 @@
+
+//IMPORT bootstrap --------------
+@import "src/assets/libs/bower_components/bootstrap/less/bootstrap.less";
+// ------------------------------
+@import "src/assets/libs/bower_components/bootstrap-social/bootstrap-social.less";
+
+// CSS import with inline -------
+@import  (inline) "src/assets/libs/bower_components/angular-loading-bar/src/loading-bar.css";
+@import  (inline) "src/assets/libs/bower_components/angular-ui-notification/dist/angular-ui-notification.min.css";
+
+// Theme for bootstrap ----------
+@import "variables.less";
+@import "bootswatch.less";
+
+// LESS FILES ---------
+@import "global.less";
+@import "lockpage.less";
+@import "footer.less";
+
+
+.my-drop-zone { border: dotted 3px lightgray; }
+.nv-file-over { border: dotted 3px red; } /* Default class applied to drop zones on over */
+.another-file-over-class { border: dotted 3px green; }
+html, body { height: 100%; }
+canvas {
+  background-color: #f3f3f3;
+  -webkit-box-shadow: 3px 3px 3px 0 #e3e3e3;
+  -moz-box-shadow: 3px 3px 3px 0 #e3e3e3;
+  box-shadow: 3px 3px 3px 0 #e3e3e3;
+  border: 1px solid #c3c3c3;
+  height: 100px;
+  margin: 6px 0 0 6px;
+}
+
+.st-sort-ascent:before{
+  content: '\25B2 ';
+}
+
+.st-sort-descent:before{
+  content: '\25BC ';
+}
+
+.st-selected {
+ background-color: dodgerblue !important;
+  color: white !important;
+}

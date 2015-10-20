@@ -1,0 +1,9 @@
+*.sw*
+*~
+.idea/
+build/
+bin/
+node_modules/
+vendor/
+dist/
+src/assets/libs/
