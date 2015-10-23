@@ -139,3 +139,4 @@ gulp.task('serve', ['build-js-app'], function () {
 
 // ------------------- builds all the environment ------------------------------------
 gulp.task('default', ['build-js-vendors', 'less', 'move-html', 'moveImg',  'watch-less', 'watch-html', 'watch-img', 'serve']);
+gulp.task('build', ['build-js-vendors', 'less', 'move-html', 'moveImg', 'build-js-app']);
