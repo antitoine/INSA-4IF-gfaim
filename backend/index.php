@@ -1,20 +1,25 @@
-<?php
-require_once('Utils.php');
+<?php require 'autoload.php';
 
-// DuckDuckGo Test
-$resultDDG = \Utils\Utils::CallAPI('GET', 'http://api.duckduckgo.com/', array(
-    'q' => 'patate',
-    'format' => 'json',
-    'pretty' => 1
-));
+Flight::route('/', function(){
+    echo 'It\'s Works !';
+});
 
-// Google Test
+Flight::route('/module1', function(){
+    Flight::json(getResultOfQuery(Flight::request()->data));
+});
 
-$resultGoogle = \Utils\Utils::CallAPI('GET', 'https://www.googleapis.com/customsearch/v1', array(
-    'key' => 'AIzaSyASK1nR0p8Mjx4Fw9XHvMI-m20xSbtAwnc',
-    'cx' => '014001075900266475386%3Aidgzvgxto1s',
-    'q' => 'patate+recette'
-));
+Flight::route('/test', 'test');
 
-//var_dump($resultDDG);
-var_dump($resultGoogle);
+Flight::route('/search', 'test');
+
+Flight::route('/module2/parse/@html', function($htmlString){
+    parseHTML($htmlString);
+});
+
+//Flight::route('/module4', 'module_4');
+
+Flight::route('/textannotate/@text', function ($text) {
+    Flight::json(TextAnnotation::annotate($text));
+});
+
+Flight::start();
