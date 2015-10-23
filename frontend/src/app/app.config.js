@@ -1,6 +1,6 @@
 var config = {
   name : "GFaim",
   api: {
-    url: "http://api.gfaim.lxc"
+    url: "http://api.gfaim.antoine-chabert.fr"
   }
 };

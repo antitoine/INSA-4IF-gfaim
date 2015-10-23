@@ -11,20 +11,6 @@ gfaimApp.config(['stateHelperProvider', '$urlRouterProvider', function (stateHel
       controller: "welcomeCtrl"
     })
     .state({
-      name: 'search',
-      url: "/search",
-      abstract: 'true',
-      template: '<ui-view/>',
-      children: [
-        {
-          name: 'results',
-          url: "/results",
-          templateUrl: '/app/components/search/results.html',
-          controller: 'resultsCtrl'
-        }
-      ]
-      })
-    .state({
       name: 'otherwise',
       url: "*path",
       template: "",

@@ -1,21 +1,31 @@
 <div>
-    <section class="bg-primary" id="about" style="padding-top: 200px; padding-bottom: 50px">
+    <section class="bg-primary welcome" id="about" ng-class="{'ontop': isSearching}">
         <div class="container">
             <div class="row">
-                <div class="col-lg-8 col-lg-offset-2 text-center">
+                <div class="col-lg-6 col-lg-offset-3 text-center">
                     <h2 class="section-heading">GFAIM !</h2>
-                    <hr class="light">
+                    <hr style="visibility: hidden" class="light">
                     <p class="text-faded"></p>
-
                     <form ng-submit="search()">
                         <div class="input-group">
-                            <input placeholder="ex: Apple" type="text" id="search"
+                            <input ng-model='query' placeholder="ex: Apple" type="text" id="search"
                                    class="form-control">
                     <span class="input-group-btn">
-                         <button class="btn btn-default" type="submit" ng-click="search()">Rechercher</button>
+                         <button class="btn btn-default" type="submit">Rechercher</button>
                     </span>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section ng-show="isSearching" id="result" class="result">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-lg-offset-3 ">
+                    <ul class="list-group">
+                        <li ng-repeat="result in results" class="list-group-item"><a href={{result}}>{{result}}</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
