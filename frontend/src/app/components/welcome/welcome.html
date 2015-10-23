@@ -1,12 +1,11 @@
 <div>
-    <section class="bg-primary" id="about" style="padding-top: 200px; padding-bottom: 50px">
+    <section class="bg-primary welcome" id="about" ng-class="{ 'ontop': isSearching}">
         <div class="container">
             <div class="row">
-                <div class="col-lg-8 col-lg-offset-2 text-center">
+                <div class="col-lg-6 col-lg-offset-3 text-center">
                     <h2 class="section-heading">GFAIM !</h2>
                     <hr class="light">
                     <p class="text-faded"></p>
-
                     <form ng-submit="search()">
                         <div class="input-group">
                             <input placeholder="ex: Apple" type="text" id="search"
@@ -17,7 +16,26 @@
                         </div>
                     </form>
                 </div>
+
+            </div>
+
+        </div>
+    </section>
+    <section ng-show="isSearching" id="result" class="result">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-lg-offset-3 ">
+                    <ul class="list-group">
+                        <li class="list-group-item">Cras justo odio</li>
+                        <li class="list-group-item">Dapibus ac facilisis in</li>
+                        <li class="list-group-item">Morbi leo risus</li>
+                        <li class="list-group-item">Porta ac consectetur ac</li>
+                        <li class="list-group-item">Vestibulum at eros</li>
+                    </ul>
+
+                </div>
             </div>
         </div>
+
     </section>
 </div>
