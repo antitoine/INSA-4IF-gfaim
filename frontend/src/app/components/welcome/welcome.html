@@ -4,32 +4,30 @@
             <div class="row">
                 <div class="col-lg-6 col-lg-offset-3 text-center">
                     <h2 class="section-heading">GFAIM !</h2>
-                    <hr class="light">
+                    <hr style="visibility: hidden" class="light">
                     <p class="text-faded"></p>
                     <form ng-submit="search()">
                         <div class="input-group">
-                            <input ng-model="query" placeholder="ex: Apple" type="text" id="search"
+                            <input ng-model='query' placeholder="ex: Apple" type="text" id="search"
                                    class="form-control">
                     <span class="input-group-btn">
-                         <button class="btn btn-default" type="submit" ng-click="search()">Rechercher</button>
+                         <button class="btn btn-default" type="submit">Rechercher</button>
                     </span>
                         </div>
                     </form>
                 </div>
-
             </div>
-
         </div>
     </section>
     <section ng-show="isSearching" id="result" class="result">
         <div class="container">
             <div class="row">
                 <div class="col-lg-6 col-lg-offset-3 ">
+                    <p>{{query}} </p>
                     <ul class="list-group">
-                        <li class="list-group-item">Cras justo odio</li>
+                        <li ng-repeat="result in results" class="list-group-item">{{result}}</li>
                     </ul>
-
-                </div>b
+                </div>
             </div>
         </div>
     </section>
