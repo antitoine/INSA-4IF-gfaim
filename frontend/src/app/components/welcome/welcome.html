@@ -1,5 +1,5 @@
 <div>
-    <section class="bg-primary welcome" id="about" ng-class="{ 'ontop': isSearching}">
+    <section class="bg-primary welcome" id="about" ng-class="{'ontop': isSearching}">
         <div class="container">
             <div class="row">
                 <div class="col-lg-6 col-lg-offset-3 text-center">
@@ -8,7 +8,7 @@
                     <p class="text-faded"></p>
                     <form ng-submit="search()">
                         <div class="input-group">
-                            <input placeholder="ex: Apple" type="text" id="search"
+                            <input ng-model="query" placeholder="ex: Apple" type="text" id="search"
                                    class="form-control">
                     <span class="input-group-btn">
                          <button class="btn btn-default" type="submit" ng-click="search()">Rechercher</button>
@@ -27,15 +27,10 @@
                 <div class="col-lg-6 col-lg-offset-3 ">
                     <ul class="list-group">
                         <li class="list-group-item">Cras justo odio</li>
-                        <li class="list-group-item">Dapibus ac facilisis in</li>
-                        <li class="list-group-item">Morbi leo risus</li>
-                        <li class="list-group-item">Porta ac consectetur ac</li>
-                        <li class="list-group-item">Vestibulum at eros</li>
                     </ul>
 
-                </div>
+                </div>b
             </div>
         </div>
-
     </section>
 </div>
