@@ -23,9 +23,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-6 col-lg-offset-3 ">
-                    <p>{{query}} </p>
                     <ul class="list-group">
-                        <li ng-repeat="result in results" class="list-group-item">{{result}}</li>
+                        <li ng-repeat="result in results" class="list-group-item"><a href={{result}}>{{result}}</a></li>
                     </ul>
                 </div>
             </div>

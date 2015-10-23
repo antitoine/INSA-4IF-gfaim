@@ -13,6 +13,8 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
                 })
         };
 
+
+
     }]);
 
 
