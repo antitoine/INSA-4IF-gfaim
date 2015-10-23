@@ -6,7 +6,7 @@ class Utils
 {
     // Method: POST, PUT, GET etc
     // Data: array("param" => "value") ==> index.php?param=value
-    public static function CallAPI($method, $url, $data = false)
+    public static function CallAPI($method, $url, $data = false, $outputFormat = 'application/json')
     {
         $curl = curl_init();
 
@@ -15,16 +15,25 @@ class Utils
             case "POST":
                 curl_setopt($curl, CURLOPT_POST, 1);
 
-                if ($data)
+                if ($data) 
+                {
                     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+                }
                 break;
+                
             case "PUT":
                 curl_setopt($curl, CURLOPT_PUT, 1);
                 break;
+                
             default:
                 if ($data)
+                {
                     $url = sprintf("%s?%s", $url, http_build_query($data));
+                }
         }
+        
+        // Set the header with the output format
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Accept: ' . $outputFormat)); 
 
         // Optional Authentication:
         curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
