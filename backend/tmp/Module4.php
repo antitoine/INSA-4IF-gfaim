@@ -17,7 +17,7 @@ $RESULT_ONLY=TRUE;
 $results = array(
    "A refreshing and light alternative to lemonade. A syrup made with pineapple juice and lemon juice is mixed with carbonated water over ice." =>
 array(
-                   'rice' => 'http://dbpedia.org/resource/Rice',
+                   'rice' => 'http://dbpedia.org/resource/Rice',s
                    'peas' => 'http://dbpedia.org/resource/Pea',
                    'herbes_de_provence' => 'http://dbpedia.org/resource/Herbes_de_Provence'
    )

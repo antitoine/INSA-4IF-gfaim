@@ -6,6 +6,9 @@ class Utils
 {
     // Method: POST, PUT, GET etc
     // Data: array("param" => "value") ==> index.php?param=value
+    /**
+     * 
+     */
     public static function CallAPI($method, $url, $data = false, $outputFormat = 'application/json')
     {
         $curl = curl_init();
@@ -35,13 +38,9 @@ class Utils
         // Set the header with the output format
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Accept: ' . $outputFormat)); 
 
-        // Optional Authentication:
-        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($curl, CURLOPT_USERPWD, "username:password");
-
         curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        
         $result = curl_exec($curl);
 
         curl_close($curl);

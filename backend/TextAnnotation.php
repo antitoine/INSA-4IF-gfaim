@@ -1,5 +1,4 @@
 <?php
-require_once('Utils.php');
 
 /**
  * Static class with methods to inspect texts and detect the key words and the
@@ -7,6 +6,7 @@ require_once('Utils.php');
  */
 class TextAnnotation
 {
+
     /**
      * Analyse the text passed by parameter and annotate it by calling dbpedia spotlight.
      * @param text The text to inspect
@@ -58,20 +58,14 @@ class TextAnnotation
         
         return $annotateResults;
     }
+
+    public static function testAnnoteTexts()
+    {
+        return TextAnnotation::annotateTexts(
+            array(
+                    'Banana.',
+                    'Chicken, pineapple, avocado, and black beans bring all of the flavors of Cuba to romaine lettuce!  I came up with this recipe to use leftover chicken in a way that combines all of the delicious Cuban flavors I grew up with.'    
+                ));
+    }
+
 }
-
-// Tests
-/*
-$results = TextAnnotation::annotateTexts(
-    array(
-        'Banana.',
-        'Chicken, pineapple, avocado, and black beans bring all of the flavors of Cuba to romaine lettuce!  I came up with this recipe to use leftover chicken in a way that combines all of the delicious Cuban flavors I grew up with.'    
-    )
-);
-
-echo '<pre>';
-var_dump($results);
-echo '</pre>';*/
-
-
-?>
