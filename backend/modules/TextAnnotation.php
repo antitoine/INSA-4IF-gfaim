@@ -15,29 +15,29 @@ class TextAnnotation
     public static function annotate($text)
     {
         $apiResults = Utils\Utils::CallAPI(
-            'POST', 'http://spotlight.dbpedia.org/rest/annotate', 
-            'text=' . urlencode($text) . '&confidence=0&types=' . urlencode('freebase:food') 
+            'POST', SPOTLIGHT_URL, 
+            'text=' . urlencode($text) . '&confidence='. SPOTLIGHT_CONFIDENCE .'&types=' . urlencode('freebase:food') 
         );
-    
+
         $apiResultsJSON = json_decode($apiResults);
-        
+
         // There is no result returned by the spotlight API
         if (empty($apiResultsJSON) || !isset($apiResultsJSON->{'Resources'})) 
         {
             return array();
         }
-        
+
         // Format the results in a new associative array
         $annotateResults = array();
-    
+
         foreach ($apiResultsJSON->{'Resources'} as $resource)
         {
             $annotateResults[$resource->{'@surfaceForm'}] = $resource->{'@URI'};
         }
-        
+
         return $annotateResults;
     }
-    
+
     /**
      * Analyse the collection of texts passed by parameter and annotate them.
      * @param texts The array of texts to inspect
@@ -50,15 +50,23 @@ class TextAnnotation
     public static function annotateTexts(array $texts) 
     {
         $annotateResults = array();
-        
+
         foreach ($texts as $text)
         {
             $annotateResults[$text] = self::annotate($text);
         }
-        
+
         return $annotateResults;
     }
 
+    /**
+     * Analyse a collection of texts.
+     * @return Associative array :
+     *  key = inspected text, 
+     *  value = associative array
+     *      key = key work spotted
+     *      value = associated dbpedia URI
+     */
     public static function testAnnoteTexts()
     {
         return TextAnnotation::annotateTexts(

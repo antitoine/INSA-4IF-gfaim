@@ -2,6 +2,7 @@
 
 class TextExtractor
 {
+
     /**
     * Get the text from every URL contained in UrlList
     * @param $urlList  array containing all the URL
@@ -21,7 +22,7 @@ class TextExtractor
         var_dump($allURL);
         return $allURL;
     }
-    
+
     /**
     * Get the text from one single URL
     * @param $url just one URL
@@ -87,5 +88,3 @@ class TextExtractor
     }
     */
 }
-
-?>
