@@ -1,0 +1,20 @@
+<div class="container searchResult">
+    <div class="row">
+        <h2 class="text-center">{{title}}</h2>
+    </div>
+    <div class="row">
+        <div class="col-md-2 col-md-offset-2">
+            <div class="row">
+                <img src={{img}} class="img-responsive">
+            </div>
+            <div class="row">
+                <p>
+                    {{mainDescription}}
+                </p>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div ng-transclude></div>
+        </div>
+    </div>
+</div>

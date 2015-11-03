@@ -3,7 +3,12 @@
   "version": "0.1.0",
   "homepage": "",
   "authors": [
-    "Paul", "Estelle", "Antoine", "Lisa", "Pierre", "Hugues"
+    "Paul",
+    "Estelle",
+    "Antoine",
+    "Lisa",
+    "Pierre",
+    "Hugues"
   ],
   "description": "Recipies search engine",
   "main": "src/index.html",
