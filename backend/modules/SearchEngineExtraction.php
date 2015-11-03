@@ -20,10 +20,12 @@ class SearchEngineExtraction
             case 'google':
 
                 $googleResults = \Utils\Utils::CallAPI('GET', SEARCH_ENGINE_URL, array(
-                    'key' => SEARCH_ENGINE_KEY,
+                    'key' => SEARCH_ENGINE_KEY2,
                     'cx' => GOOGLE_SEARCH_CX,
-                    'q' => $query
-                ));
+                    'q' => $query,
+                    'safe' => 'high',
+                    'lr' => 'lang_en'
+                )); 
 
                 $googleResultsJSON = json_decode($googleResults);
 
@@ -38,7 +40,7 @@ class SearchEngineExtraction
                 break;
             // TODO case 'duckduckgo'
             // TODO case 'yahoo'
-        }
+       }
 
         return $links;
     }

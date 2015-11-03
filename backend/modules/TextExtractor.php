@@ -4,7 +4,7 @@ class TextExtractor
 {
 
     /**
-     * List of accepted code in request 
+     * List of accepted code in request
      */
     private static $include_header_code = array(
         '200'
@@ -45,12 +45,22 @@ class TextExtractor
      */
     public static function getHtmlOfURL($url)
     {
-        $textFromURL = file_get_contents($url);
+        /*$textFromURL = file_get_contents($url);
         if($textFromURL == false)
-       { 
+        { 
             return null;
         }
-        return $textFromURL;
+        return $textFromURL;*/
+
+
+        $ch = curl_init();
+        $timeout = 1;
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        return $data;
     }
 
     /**
@@ -77,9 +87,16 @@ class TextExtractor
         }
         return $text;
     }
-    
+
     public static function getAllTextTest() {
+        // getAllText (texte final récupéré pour toutes les url)
         return self::getAllText(array('http://allrecipes.com/recipe/7281/chocolate-cherry-cake-i/', 'http://www.pillsbury.com/recipes/chocolate-cherry-bars/15d6f3ce-21b3-43fb-8cb0-b33fb4177d3e'));
+
+        // getTextFromHtml (texte final récupéré pour une seule page html)
+        //return self::getTextFromHtml('html');
+
+        // getHtmlOfUrl
+        //return self::getHtmlOfUrl('http://allrecipes.com/recipe/7281/chocolate-cherry-cake-i/');
     }
 
 }

@@ -67,19 +67,24 @@ class ResultEnhancer {
     }
     
     /**
-     * @brief Treat function, enhances graph extracting values of the required predicate
+     * @brief Process function, enhances graph extracting values of the required predicate
      * @param array $results
      *      Array of uris to scan using predicates
      * @param array $requiredPredicates
      *      Array of predicates to use to enhance graph
      */
-    public static function Treat($results, $requiredPredicates) {
+    public static function Process($results, $requiredPredicates = array("dbp:fat", "dbp:kj")) {
         // Execution des requetes
         $requests = array();
         $allTriples = array(); 
         
-        foreach($results as $key => $uris) {
+        $resultProcess = array();
+        
+        // Foreach list of uris
+        foreach($results as $url => $uris) {
+            // Foreach uri in the array  
             foreach($uris as $word => $uri) {
+                // Foreach predicate to find
                 foreach($requiredPredicates as $predicate) {
                     $triples = self::getTripleFromPredicate($uri, $predicate);
                     if(!empty($triples)) {
@@ -87,15 +92,17 @@ class ResultEnhancer {
                     }
                 }
             }
+            
+            $resultProcess[$url] = $allTriples;
         }    
         
-        return $allTriples;
+        return $resultProcess;
     }
     
     /**
-     * @brief Test function associated to Treat function
+     * @brief Test function associated to Process function
      */ 
-    public static function TreatTest(){
+    public static function ProcessTest(){
         
         //
         $REQUIRED_PREDICATES = array("dbp:fat", "dbp:kj");
@@ -119,6 +126,6 @@ class ResultEnhancer {
             )
         );
 
-        return self::Treat($RESULTS, $REQUIRED_PREDICATES);
+        return self::Process($RESULTS, $REQUIRED_PREDICATES);
     }
 }
