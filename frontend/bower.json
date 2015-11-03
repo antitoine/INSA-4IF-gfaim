@@ -3,7 +3,12 @@
   "version": "0.1.0",
   "homepage": "",
   "authors": [
-    "Paul", "Estelle", "Antoine", "Lisa", "Pierre", "Hugues"
+    "Paul",
+    "Estelle",
+    "Antoine",
+    "Lisa",
+    "Pierre",
+    "Hugues"
   ],
   "description": "Recipies search engine",
   "main": "src/index.html",
@@ -24,6 +29,13 @@
     "angular-ui-router": "~0.2.15",
     "angular-ui-router.stateHelper": "~1.3.1",
     "angular-smart-table": "~2.1.2",
-    "angular-file-upload": "~2.1.1"
+    "angular-file-upload": "~2.1.1",
+    "vis": "~4.9.0"
+  },
+  "overrides" : {
+    "vis": {
+      "main": ["src/assets/libs/bower_components/vis/dist/vis.min.js",
+        "src/assets/libs/bower_components/vis/dist/vis.min.css"]
+    }
   }
 }
