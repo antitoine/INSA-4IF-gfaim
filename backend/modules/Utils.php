@@ -1,7 +1,5 @@
 <?php
 
-namespace Utils;
-
 class Utils
 {
     // Method: POST, PUT, GET etc
