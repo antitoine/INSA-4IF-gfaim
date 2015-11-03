@@ -10,9 +10,11 @@ Flight::route('/test', 'test');
 
 Flight::route('/search', function(){
     Flight::json(
-        TextExtractor::getAllText(
-            SearchEngineExtraction::getResultLinksOfQuery(
-                Flight::request()->query['q']
+        TextAnnotation::annotateTexts(
+            TextExtractor::getAllText(
+                SearchEngineExtraction::getResultLinksOfQuery(
+                    Flight::request()->query['q']
+                )
             )
         )
     );

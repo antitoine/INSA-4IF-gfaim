@@ -77,6 +77,9 @@ class ResultEnhancer {
         // Execution des requetes
         $requests = array();
         $allTriples = array(); 
+        
+        $resultProcess = array();
+        
         // Foreach list of uris
         foreach($results as $url => $uris) {
             // Foreach uri in the array  
@@ -89,9 +92,11 @@ class ResultEnhancer {
                     }
                 }
             }
+            
+            $resultProcess[$url] = $allTriples;
         }    
         
-        return $allTriples;
+        return $resultProcess;
     }
     
     /**

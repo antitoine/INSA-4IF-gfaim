@@ -10,6 +10,8 @@ define('SEARCH_ENGINE_URL',     'https://www.googleapis.com/customsearch/v1');
 define('SEARCH_ENGINE_KEY',     'AIzaSyASK1nR0p8Mjx4Fw9XHvMI-m20xSbtAwnc');
 define('GOOGLE_SEARCH_CX',      '014001075900266475386:idgzvgxto1s');
 
+define('SEARCH_ENGINE_KEY2',     'AIzaSyCPZQ6hboLZx-6rx9sRTh1e7mzzfXwK-fg');
+
 /**
  * TextAnnotation Configuration
  */
