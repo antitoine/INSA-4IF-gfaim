@@ -40,7 +40,9 @@ class TextAnnotation
 
     /**
      * Analyse the collection of texts passed by parameter and annotate them.
-     * @param texts The array of texts to inspect
+     * @param $urlTextList Associative array :
+     * key = source url
+     * value = full text
      * @return Associative array :
      *  key = inspected text,
      *  value = associative array
@@ -61,7 +63,7 @@ class TextAnnotation
     /**
      * Analyse a collection of texts.
      * @return Associative array :
-     *  key = inspected text,
+     *  key = source url,
      *  value = associative array
      *      key = key work spotted
      *      value = associated dbpedia URI
