@@ -68,7 +68,7 @@ class TextAnnotation
      *      key = key work spotted
      *      value = associated dbpedia URI
      */
-    public static function testAnnoteTexts()
+    public static function annotateTextsTest()
     {
         return self::annotateTexts(
             array(
