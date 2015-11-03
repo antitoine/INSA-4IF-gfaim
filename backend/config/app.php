@@ -13,5 +13,6 @@ define('GOOGLE_SEARCH_CX',      '014001075900266475386:idgzvgxto1s');
 /**
  * TextAnnotation Configuration
  */
-define('SPOTLIGHT_URL',         'http://spotlight.dbpedia.org/rest/annotate');
+//define('SPOTLIGHT_URL',         'http://spotlight.dbpedia.org/rest/annotate');
+define('SPOTLIGHT_URL',         'http://spotlight.gfaim.antoine-chabert.fr/rest/annotate');
 define('SPOTLIGHT_CONFIDENCE',  0);
