@@ -3,6 +3,9 @@
 class TextExtractor
 {
 
+    /**
+     * List of accepted code in request 
+     */
     private static $include_header_code = array(
         '200'
     );
@@ -26,7 +29,9 @@ class TextExtractor
                 $html = self::getHtmlOfURL($clearUrl);
                 $text = '';
                 if($html != null)
+                {
                     $text = self::getTextFromHtml($html);
+                }
                 $urlTextList[$clearUrl] = $text;
             }
         }
@@ -42,7 +47,9 @@ class TextExtractor
     {
         $textFromURL = file_get_contents($url);
         if($textFromURL == false)
+        {
             return null;
+        }
         return $textFromURL;
     }
 
@@ -68,58 +75,7 @@ class TextExtractor
             if(!empty(trim($node->textContent)))
                 $text .= str_replace($order, $replace, trim($node->textContent)) . ' ';
         }
-        return $text; // text
+        return $text;
     }
 
-    /*
-    // Ebauche de parseur html plus evolue que strip tags
-    
-    public static function getTextFromHtml($htmlString)
-    {
-        // finalText will be returned
-        $finalText = "";
-        
-        
-        $finalText.=TextExtractor::getNodeVal($htmlString, 'h1') . '. ';
-        $finalText.=TextExtractor::getNodeVal($htmlString, 'h2') . '. ';
-        $finalText.=TextExtractor::getNodeVal($htmlString, 'h3') . '. ';
-        $finalText.=TextExtractor::getNodeVal($htmlString, 'span');
-        $finalText.=TextExtractor::getNodeVal($htmlString, 'div');
-        $finalText.=TextExtractor::getNodeVal($htmlString, 'b');
-        $finalText.=TextExtractor::getNodeAttr($htmlString, 'a', 'href');
-        
-        return $finalText;
-    }
-    
-    public static function getNodeVal($htmlString, $node)
-    {
-        $finalText = '';
-        
-        // Create a DOM parser object
-        $dom = new DOMDocument();
-        // @ : to suppress warnings
-        @$dom->loadHTML($htmlString);
-        
-        foreach($dom->getElementsByTagName($node) as $tag) {
-            $text = $tag->nodeValue;
-            $finalText .= $text . ' ';
-        }
-        return $finalText;
-    }
-    
-    public static function getNodeAttr($htmlString, $node, $attr)
-    {
-        $finalText = '';
-        
-        // Create a DOM parser object
-        $dom = new DOMDocument();
-        // @ : to suppress warnings
-        @$dom->loadHTML($htmlString);
-        
-        foreach($dom->getElementsByTagName($node) as $tag) {
-            $text = $tag->getAttribute($attr);
-            $finalText .= $text . ' ';
-        }
-        return $finalText;
-    }*/
 }
