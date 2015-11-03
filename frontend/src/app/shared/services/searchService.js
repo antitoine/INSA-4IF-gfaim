@@ -4,7 +4,7 @@ function search(Restangular, $log, $q) {
     var self = this;
     self.search = function (query) {
         return $q(function (resolve, reject) {
-            Restangular.one('/textannotate/'+query)
+            Restangular.one('/search?q='+query)
                 .get()
                 .then(function (data) {
                     resolve(data.plain());
