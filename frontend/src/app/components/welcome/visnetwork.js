@@ -2,17 +2,14 @@ gfaimApp
     .directive('visNetwork', function() {
     return {
         restrict: 'E',
-        require: '^ngModel',
         scope: {
-            ngModel: '=',
             onSelect: '&',
-            options: '='
+            network: '='
         },
-        link: function($scope, $element, $attrs, ngModel) {
-            var network = new vis.Network($element[0], $scope.ngModel, $scope.options || {});
+        link: function($scope, $element, $attrs) {
 
             var onSelect = $scope.onSelect() || function(prop) {};
-            network.on('select', function(properties) {
+            $scope.network.on('select', function(properties) {
                 onSelect(properties);
             });
 

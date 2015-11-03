@@ -17,6 +17,25 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
             //    })
         };
 
+        $scope.externalLinks = [
+            {
+                title: "titre du résultat",
+                url: "http;//google.fr",
+                description: "ceci est une longue description ceci est une longue description"
+            },
+            {
+                title: "titre du résultat",
+                url: "http;//google.fr",
+                description: "ceci est une longue description ceci est une longue description"
+            },
+            {
+                title: "titre du résultat",
+                url: "http;//google.fr",
+                description: "ceci est une longue description ceci est une longue description"
+            }
+        ];
+
+
 
         $scope.nodes = new vis.DataSet();
         $scope.edges = new vis.DataSet();
@@ -44,21 +63,12 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
             edges: $scope.edges
         };
 
+        var container = document.getElementById('container-network');
+        $scope.network = new vis.Network(container, $scope.network_data, $scope.network_options || {});
+
         $scope.network_options = {
-            "edges": {
-                "smooth": {
-                    "forceDirection": "none"
-                }
-            },
             "interaction": {
                 "hover": true
-            },
-            "physics": {
-                "forceAtlas2Based": {
-                    "springLength": 100
-                },
-                "minVelocity": 0.75,
-                "solver": "forceAtlas2Based"
             }
         };
 
@@ -69,6 +79,7 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
         };
 
         $scope.onNodeSelect = function(params) {
+
             if(params.nodes[0]){
                 var selected = params.nodes[0];
                 console.log(params);
@@ -80,6 +91,11 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
                     clickConcept(selected);
                 }
             }
+            var options = {offset: {x:0,y:0},
+                duration: 2000,
+                easingFunction: "easeInOutQuad"
+            };
+            $scope.network.fit({animation:options});
         };
 
         var clickConcept = function(groupid){
