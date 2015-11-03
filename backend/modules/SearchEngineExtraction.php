@@ -38,7 +38,7 @@ class SearchEngineExtraction
                 break;
             // TODO case 'duckduckgo'
             // TODO case 'yahoo'
-        }
+       }
 
         return $links;
     }
