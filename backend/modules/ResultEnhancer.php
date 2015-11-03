@@ -1,6 +1,6 @@
 <?php
 
-class enrichisseurDeResultat {
+class ResultEnhancer {
     
     // --------------------------------- CONFIG --------------------------------
     
@@ -66,11 +66,19 @@ class enrichisseurDeResultat {
         return $triples;
     }
     
+    /**
+     * @brief Treat function, enhances graph extracting values of the required predicate
+     * @param array $results
+     *      Array of uris to scan using predicates
+     * @param array $requiredPredicates
+     *      Array of predicates to use to enhance graph
+     */
     public static function Treat($results, $requiredPredicates) {
         // Execution des requetes
         $requests = array();
+        $allTriples = array(); 
+        
         foreach($results as $key => $uris) {
-            $allTriples = array(); 
             foreach($uris as $word => $uri) {
                 foreach($requiredPredicates as $predicate) {
                     $triples = self::getTripleFromPredicate($uri, $predicate);
@@ -79,61 +87,38 @@ class enrichisseurDeResultat {
                     }
                 }
             }
-            echo "<pre>";
-            print_r($allTriples);
-            echo "</pre>";
-        }     
+        }    
+        
+        return $allTriples;
     }
     
-    // if($DEBUG) {
-    //     // HTML degueu pour essayer
-    //     echo "<!DOCTYPE html>";
-    //     echo "<html>";
-    //     echo "  <head>";
-    //     echo "<!-- Latest compiled and minified CSS -->
-    //     <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css\">
-    //     <!-- Optional theme -->
-    //     <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css\">
-    //     <!-- Latest compiled and minified JavaScript -->
-    //     <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js\"></script>";
-    //     echo "  </head>";
-    //     echo "  <body>";
-    //     echo "      <div class=\"container-fluid\">";
-    //     echo "          <div class=\"row\">";
-    //     echo "            <div class=\"col-md-12\">";
-    //     echo "                  <table class=\"table\">";
-    //     foreach($requests as $req => $resp) {
-    //         if(!$RESULT_ONLY) {
-    //         echo "<tr><td> Executing query : " . htmlspecialchars(urldecode($req)) . "</td></tr>";
-    //         }
-    //         echo "<tr><td><pre>";
-    //       // $triples = (array)$resp->results->bindings;
-    //         //foreach($triples as $triple) {
-    //           // printNutritionalInfos($triple, "dbp:fat");
-    //         //}
-    //         echo "</pre></td></tr>";
-    //     }
-    //     echo "                  </table>";
-    //     echo "              </div>";
-    //     echo "          </div>";
-    //     echo "      </div>";
-    //     echo "  </body>";
-    //     echo "</html>";
-    // }
-}
-
-$REQUIRED_PREDICATES = array("dbp:fat", "dbp:kj");
-
-// Tableau des URI générées par le module 3
-    // Recette : riz petits pois et herbes de provence
-    $RESULTS = array(
-       "http://www.lemonade.org" =>
-    array(
-                       
-                       'rice' => 'http://dbpedia.org/resource/Rice',
-                       'peas' => 'http://dbpedia.org/resource/Pea',
-                       'herbes_de_provence' => 'http://dbpedia.org/resource/Herbes_de_Provence'
-       )
-    );
+    /**
+     * @brief Test function associated to Treat function
+     */ 
+    public static function TreatTest(){
+        
+        //
+        $REQUIRED_PREDICATES = array("dbp:fat", "dbp:kj");
     
-enrichisseurDeResultat::Treat($RESULTS, $REQUIRED_PREDICATES);
+        // Tableau des URI générées par le module 3
+        // Recette : riz petits pois et herbes de provence
+        $RESULTS = array(
+           "http://www.lemonade.org" =>
+                array(     
+                   'rice' => 'http://dbpedia.org/resource/Rice',
+                   'peas' => 'http://dbpedia.org/resource/Pea',
+                   'herbes_de_provence' => 'http://dbpedia.org/resource/Herbes_de_Provence'
+                ),
+            "http://www.miam.fr/recette/sandwich_poisson" => 
+            array(
+                'bread' => 'http://dbpedia.org/page/Bread',
+                'butter' => 'http://dbpedia.org/page/Butter',
+                'tomato' => 'http://dbpedia.org/page/Tomato',
+                'emmental' => 'http://dbpedia.org/page/Emmental_cheese',
+                'lettuce' => 'http://dbpedia.org/page/Lettuce'
+            )
+        );
+
+        return self::Treat($RESULTS, $REQUIRED_PREDICATES);
+    }
+}

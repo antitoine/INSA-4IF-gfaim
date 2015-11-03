@@ -30,3 +30,7 @@ Flight::route('/extract/test', function () {
     Flight::json(TextExtractor::getAllTextTest());
 });
 
+Flight::route('/enhance/test', function () {
+    Flight::json(ResultEnhancer::TreatTest());
+});
+
