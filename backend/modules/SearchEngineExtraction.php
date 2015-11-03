@@ -24,22 +24,20 @@ class SearchEngineExtraction
                     'cx' => GOOGLE_SEARCH_CX,
                     'q' => $query
                 ));
-        
+
                 $googleResultsJSON = json_decode($googleResults);
-        
-                
-        
+
                 if (!isset($googleResultsJSON->{'items'})) {
                     return $links;
                 }
-        
+
                 foreach ($googleResultsJSON->{'items'} as $item)
                 {
                     $links[] = $item->{'link'};
                 }
                 break;
             // TODO case 'duckduckgo'
-            // TODOcase 'yahoo'
+            // TODO case 'yahoo'
         }
 
         return $links;
@@ -50,7 +48,7 @@ class SearchEngineExtraction
      * @return Collection of links returned by the google custom search engine.
      */
     public static function getResultOfTestQuery() {
-        return SearchEngineExtraction::getResultLinksOfQuery('pineapple juice');
+        return SearchEngineExtraction::getResultLinksOfQuery('tomato chocolate');
     }
 
 }
