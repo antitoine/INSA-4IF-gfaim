@@ -11,6 +11,8 @@ define('SEARCH_ENGINE_KEY',     'AIzaSyASK1nR0p8Mjx4Fw9XHvMI-m20xSbtAwnc');
 define('GOOGLE_SEARCH_CX',      '014001075900266475386:idgzvgxto1s');
 
 define('SEARCH_ENGINE_KEY2',     'AIzaSyCPZQ6hboLZx-6rx9sRTh1e7mzzfXwK-fg');
+define('SEARCH_ENGINE_KEY3',     'AIzaSyBuS4S5W8vAkRajhQuy_Hv2CM6JPvfLbPo');
+
 
 /**
  * TextAnnotation Configuration
