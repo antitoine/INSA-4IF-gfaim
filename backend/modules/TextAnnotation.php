@@ -15,14 +15,14 @@ class TextAnnotation
     public static function annotate($text)
     {
         $apiResults = Utils\Utils::CallAPI(
-            'POST', SPOTLIGHT_URL, 
-            'text=' . urlencode($text) . '&confidence='. SPOTLIGHT_CONFIDENCE .'&types=' . urlencode('freebase:food') 
+            'POST', SPOTLIGHT_URL,
+            'text=' . urlencode($text) . '&confidence='. SPOTLIGHT_CONFIDENCE .'&types=' . urlencode('freebase:food')
         );
 
         $apiResultsJSON = json_decode($apiResults);
 
         // There is no result returned by the spotlight API
-        if (empty($apiResultsJSON) || !isset($apiResultsJSON->{'Resources'})) 
+        if (empty($apiResultsJSON) || !isset($apiResultsJSON->{'Resources'}))
         {
             return array();
         }
@@ -42,38 +42,36 @@ class TextAnnotation
      * Analyse the collection of texts passed by parameter and annotate them.
      * @param texts The array of texts to inspect
      * @return Associative array :
-     *  key = inspected text, 
+     *  key = inspected text,
      *  value = associative array
      *      key = key work spotted
      *      value = associated dbpedia URI
      */
-    public static function annotateTexts(array $texts) 
+    public static function annotateTexts(array $urlTextList)
     {
         $annotateResults = array();
 
-        foreach ($texts as $text)
+        foreach ($urlTextList as $url => $text)
         {
-            $annotateResults[$text] = self::annotate($text);
+            $annotateResults[$url] = self::annotate($text);
         }
-
         return $annotateResults;
     }
 
     /**
      * Analyse a collection of texts.
      * @return Associative array :
-     *  key = inspected text, 
+     *  key = inspected text,
      *  value = associative array
      *      key = key work spotted
      *      value = associated dbpedia URI
      */
     public static function testAnnoteTexts()
     {
-        return TextAnnotation::annotateTexts(
+        return self::annotateTexts(
             array(
-                    'Banana.',
-                    'Chicken, pineapple, avocado, and black beans bring all of the flavors of Cuba to romaine lettuce!  I came up with this recipe to use leftover chicken in a way that combines all of the delicious Cuban flavors I grew up with.'    
-                ));
+              'http://www.healthline.com/health/food-nutrition/pineapple-juice-benefits' => 'Chicken, pineapple, avocado, and black beans bring all of the flavors of Cuba to romaine lettuce!  I came up with this recipe to use leftover chicken in a way that combines all of the delicious Cuban flavors I grew up with.'
+            ));
     }
 
 }
