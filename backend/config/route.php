@@ -9,15 +9,25 @@ Flight::route('/', function(){
 Flight::route('/test', 'test');
 
 Flight::route('/search', function(){
-    Flight::json(
-        TextAnnotation::annotateTexts(
-            TextExtractor::getAllText(
-                SearchEngineExtraction::getResultLinksOfQuery(
-                    Flight::request()->query['q']
-                )
-            )
-        )
-    );
+    
+    $annotatedUrls = TextAnnotation::annotateTexts(
+                        TextExtractor::getAllText(
+                            SearchEngineExtraction::getResultLinksOfQuery(
+                                Flight::request()->query['q']
+                            )
+                        )
+                    );
+                    
+    $enhancedResults = ResultEnhancer::Process($annotatedUrls);
+    
+    $connectedComponents = GraphSimilarity::getConnectedComponentsJSON($enhancedResults, 0.5);
+    
+    //echo '<pre>';
+    //var_dump($connectedComponents);
+    //echo '</pre>';
+    
+    
+    Flight::json($connectedComponents);
 });
 
 Flight::route('/search/test', function(){
@@ -33,6 +43,7 @@ Flight::route('/extract/test', function () {
 });
 
 Flight::route('/enhance/test', function () {
-    Flight::json(ResultEnhancer::TreatTest());
+    Flight::json(ResultEnhancer::ProcessTest());
 });
 
+?>

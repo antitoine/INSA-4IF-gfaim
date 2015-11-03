@@ -73,7 +73,7 @@ class ResultEnhancer {
      * @param array $requiredPredicates
      *      Array of predicates to use to enhance graph
      */
-    public static function Process($results, $requiredPredicates) {
+    public static function Process($results, $requiredPredicates = array("dbp:fat", "dbp:kj")) {
         // Execution des requetes
         $requests = array();
         $allTriples = array(); 
