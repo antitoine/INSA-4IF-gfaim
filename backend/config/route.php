@@ -25,13 +25,16 @@ Flight::route('/search', function(){
     //echo '<pre>';
     //var_dump($connectedComponents);
     //echo '</pre>';
-    
-    
+
     Flight::json($connectedComponents);
 });
 
 Flight::route('/search/test', function(){
-    Flight::json(SearchEngineExtraction::getResultLinksOfQuery(Flight::request()->query['q']));
+    //Flight::json(SearchEngineExtraction::getResultLinksOfQuery(Flight::request()->query['q']));
+    
+    echo '<pre>';
+    var_dump(SearchEngineExtraction::getResultLinksOfQuery(Flight::request()->query['q']));
+    echo '</pre>';
 });
 
 Flight::route('/annotate/test', function () {
@@ -46,4 +49,8 @@ Flight::route('/enhance/test', function () {
     Flight::json(ResultEnhancer::ProcessTest());
 });
 
-?>
+Flight::route('/similarity/test', function () {
+    echo '<pre>';
+    var_dump(GraphSimilarity::getConnectedComponentsJSONTest());
+    echo '</pre>';
+});

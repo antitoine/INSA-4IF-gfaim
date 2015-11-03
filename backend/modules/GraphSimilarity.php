@@ -1,11 +1,17 @@
 <?php
 
 /**
- * Static class with methods to compare the similarities between rdg graphs, in
+ * Class with methods to compare the similarities between rdg graphs, in
  * order to group the results by main concept groups.
  */
 class GraphSimilarity
 {
+    
+    private function __construct() {
+        
+    }
+    
+    
     /**
      * Calculate the similarity index between two rdf data lists, using the
      * jaccard similarity index.
@@ -94,14 +100,22 @@ class GraphSimilarity
         $connectedComponentsGraph = self::computeGlobalGraphResults($rdfResults, $similarityThreshold);
         
         // Create the array to return
-        $arrayJSON = array();
+        $connectedComponentsList = array();
         
         foreach ($connectedComponentsGraph as $graph) 
         {
-            $arrayJSON[] = $graph->asArray(); 
+            $connectedComponent = array();
+            
+            // Set the graph
+            $connectedComponent['graph'] = $graph->asArray();
+            
+            // Detect and set the main concept of the connected component
+            // todo
+            
+            $connectedComponentsList[] = $connectedComponent;
         }
         
-        return $arrayJSON;
+        return $connectedComponentsList;
     }
     
     public static function getConnectedComponentsJSONTest()

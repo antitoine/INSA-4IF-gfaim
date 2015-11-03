@@ -15,7 +15,8 @@ class Cache
     /**
      * Constructor
      */
-    private function __construct() {
+    private function __construct()
+    {
         $this->db = new SQLite3(DATABASE_ROOT);
     }
 
@@ -35,7 +36,11 @@ class Cache
      */
     private function createIfNotExistsTextTable()
     {
-        return $this->db->exec('CREATE TABLE IF NOT EXISTS TEXT (URL TEXT PRIMARY KEY NOT NULL, CONTENT TEXT NOT NULL);');
+        return $this->db->exec(
+            'CREATE TABLE IF NOT EXISTS TEXT (
+                URL TEXT PRIMARY KEY NOT NULL,
+                CONTENT TEXT NOT NULL
+            );');
     }
 
     /**
@@ -43,7 +48,14 @@ class Cache
      */
     public function createIfNotExistsSearchTable()
     {
-        return $this->db->exec('CREATE TABLE IF NOT EXISTS SEARCH (QUERY TEXT PRIMARY KEY NOT NULL, RESULT TEXT NOT NULL);');
+        //$this->db->exec('DROP TABLE SEARCH');
+        
+        return $this->db->exec(
+            'CREATE TABLE IF NOT EXISTS SEARCH (
+                QUERY TEXT NOT NULL, 
+                RESULT TEXT NOT NULL,
+                PRIMARY KEY (QUERY, RESULT)
+            );');
     }
 
     /**
@@ -55,12 +67,23 @@ class Cache
     {
         $textResult = null;
         $ret = $this->createIfNotExistsTextTable();
-        if (!$ret) {
+        
+        if (!$ret)
+        {
             echo $this->db->lastErrorMsg();
-        } else {
+        }
+        else
+        {
             $statement = $this->db->prepare('SELECT CONTENT FROM TEXT WHERE URL = :url;');
             $statement->bindValue(':url', $url);
-            $textResult = $statement->execute();
+
+            $statementResultList = $statement->execute();
+
+            while($statementResult = $statementResultList->fetchArray())
+            {
+                $textResult = $statementResult['CONTENT'];
+                break;
+            }
         }
         return $textResult;
     }
@@ -73,15 +96,26 @@ class Cache
      */
     public function setTextUrl($url, $text)
     {
-        $textResult = null;
         $ret = $this->createIfNotExistsTextTable();
-        if (!$ret) {
+
+        if (!$ret)
+        {
             echo $this->db->lastErrorMsg();
-        } else {
-            $safeUrl = SQLite3::escapeString($url);
-            $safeText = SQLite3::escapeString($text);
-            $ret = $this->db->exec('INSERT INTO TEXT ("URL","CONTENT") VALUES ('.$safeUrl.', '.$safeText.');');
         }
+        else
+        {
+            $insertStatement = $this->db->prepare("INSERT OR IGNORE INTO TEXT ('URL', 'CONTENT') VALUES (:url, :content)");
+            $insertStatement->bindParam(':url', $url);
+            $insertStatement->bindParam(':content', $text);
+
+            $ret = $insertStatement->execute();
+
+            if (!$ret)
+            {
+                echo $this->db->lastErrorMsg();
+            }
+        }
+
         return $ret;
     }
 
@@ -90,16 +124,20 @@ class Cache
      * @param $query the query
      * @return null|SQLite3Result
      */
-    public function getResultSearchByQuery($query)
+    public function getResultsSearchByQuery($query)
     {
-        $queryResult = null;
+        $queryResult = array();
         $ret = $this->createIfNotExistsSearchTable();
         if (!$ret) {
             echo $this->db->lastErrorMsg();
         } else {
             $statement = $this->db->prepare('SELECT RESULT FROM SEARCH WHERE QUERY = :query;');
             $statement->bindValue(':query', $query);
-            $queryResult = $statement->execute();
+            $queryResultsSet = $statement->execute();
+            
+            while ($result = $queryResultsSet->fetchArray()) {
+                $queryResult[] = $result['RESULT'];
+            }
         }
         return $queryResult;
     }
@@ -110,17 +148,34 @@ class Cache
      * @param $result the result of the query
      * @return bool True if inserted
      */
-    public function setResultSearchQuery($query, $result)
+    public function setResultsSearchQuery($query, $results)
     {
         $textResult = null;
         $ret = $this->createIfNotExistsSearchTable();
-        if (!$ret) {
+
+        if (!$ret)
+        {
             echo $this->db->lastErrorMsg();
-        } else {
-            $safeQuery = SQLite3::escapeString($query);
-            $safeResult = SQLite3::escapeString($result);
-            $ret = $this->db->exec('INSERT INTO SEARCH ("QUERY","RESULT") VALUES ('.$safeQuery.', '.$safeResult.');');
         }
+        else
+        {
+            $insertStatement = $this->db->prepare("INSERT OR IGNORE INTO SEARCH ('QUERY', 'RESULT') VALUES (:query, :result)");
+            $insertStatement->bindParam(':query', $query);
+            
+            foreach ($results as $result)
+            {
+                $insertStatement->bindValue(':result', $result);
+                
+                $ret = $insertStatement->execute();
+                
+                if (!$ret)
+                {
+                    echo $this->db->lastErrorMsg();
+                }
+            }
+
+        }
+        
         return $ret;
     }
 }
