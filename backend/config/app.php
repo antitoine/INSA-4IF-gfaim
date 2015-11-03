@@ -3,6 +3,11 @@
 /******************* Configuration file **************************/
 
 /**
+ * Globale
+ */
+const VAR_DIR = '/var/www/gfaim/backend/var';
+
+/**
  * SearchEngineExtraction Configuration
  */
 const SEARCH_ENGINE_URL = 'https://www.googleapis.com/customsearch/v1';
@@ -27,4 +32,4 @@ const SPOTLIGHT_CONFIDENCE = 0;
 /**
  * Cache DataBase
  */
-const DATABASE_ROOT = '/var/www/gfaim/backend/var/cache.sqlite';
+const DATABASE_ROOT = VAR_DIR . '/cache.sqlite3';
