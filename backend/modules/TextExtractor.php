@@ -47,7 +47,7 @@ class TextExtractor
     {
         $textFromURL = file_get_contents($url);
         if($textFromURL == false)
-        {
+       { 
             return null;
         }
         return $textFromURL;
@@ -76,6 +76,10 @@ class TextExtractor
                 $text .= str_replace($order, $replace, trim($node->textContent)) . ' ';
         }
         return $text;
+    }
+    
+    public static function getAllTextTest() {
+        return self::getAllText(array('http://allrecipes.com/recipe/7281/chocolate-cherry-cake-i/', 'http://www.pillsbury.com/recipes/chocolate-cherry-bars/15d6f3ce-21b3-43fb-8cb0-b33fb4177d3e'));
     }
 
 }

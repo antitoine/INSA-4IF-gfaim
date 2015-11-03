@@ -9,18 +9,24 @@ Flight::route('/', function(){
 Flight::route('/test', 'test');
 
 Flight::route('/search', function(){
+    Flight::json(
+        TextExtractor::getAllText(
+            SearchEngineExtraction::getResultLinksOfQuery(
+                Flight::request()->query['q']
+            )
+        )
+    );
+});
+
+Flight::route('/search/test', function(){
     Flight::json(SearchEngineExtraction::getResultLinksOfQuery(Flight::request()->query['q']));
 });
 
-Flight::route('/annotate', function () {
-    Flight::json(TextAnnotation::annotate(Flight::request()->data['text']));
-});
-
 Flight::route('/annotate/test', function () {
-    Flight::json(TextAnnotation::testAnnoteTexts());
+    Flight::json(TextAnnotation::annotateTextsTest());
 });
 
-Flight::route('/extract', function () {
-    Flight::json(TextExtractor::getAllText(SearchEngineExtraction::getResultOfTestQuery()));
+Flight::route('/extract/test', function () {
+    Flight::json(TextExtractor::getAllTextTest());
 });
 
