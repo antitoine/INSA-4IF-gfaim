@@ -64,35 +64,38 @@ class GFaimSearchEngine {
             $mainConceptURI = $connectedComponent['mainConcept']['uri'];
             
             if (!empty($mainConceptURI)) {
-                //$dataMainConception = self::getConceptData($mainConceptURI);
+                $conceptDetails = ResultEnhancer::getGeneralInfos($mainConceptURI);
+                echo '<pre>';
+                var_dump($conceptDetails);
+                echo '</pre>';
+                /*
                 $finalData[$key]['mainConcept'] = array(
-                    'name' => 'name',
-                    'uri' => $mainConceptURI,
-                    'image' => 'http://dbpedia.org/statics/dbpedia_logo.png',
-                    'imageCaption' => 'image caption',
-                    'description' => 'my description'
-                );
+                    'name' => $conceptDetails[0],
+                    'description' => $conceptDetails[1],
+                    'wikipediaUrl' => $conceptDetails[2],
+                    'image' => $conceptDetails[3],
+                    'imageCaption' => $conceptDetails[4],
+                    'uri' => $mainConceptURI
+                );*/
             }
         }
     }
     
     public static function addExternLinksData(&$finalData, &$googleResults) {
         foreach ($finalData as $key => $connectedComponent) {
-            echo '<pre>';
-            var_dump($connectedComponent['externLinks']);
-            echo '</pre>';
+            $externLinks = $connectedComponent['externLinks'];
             
-            /*$url = $connectedComponent['externLinks']['url'];
-            
-            if (!empty($url)) {
-                $urlDetails = $googleResults[$url];
+            if (!empty($externLinks)) {
+                foreach ($externLinks as $urlKey => $urlData) {
+                    $urlDetails = $googleResults[$urlData['url']];
                 
-                $finalData[$key]['externLinks'] = array(
-                    'url' => $url,
-                    'title' => $urlDetails['title'],
-                    'description' => $urlDetails['description']
-                );
-            }*/
+                    $finalData[$key]['externLinks'][$urlKey] = array(
+                        'url' => $urlData['url'],
+                        'title' => $urlDetails['title'],
+                        'description' => $urlDetails['description']
+                    );
+                }
+            }
         }
     }
     
@@ -115,7 +118,7 @@ class GFaimSearchEngine {
     //echo '</pre>';
     
         // Add additional data : complete data for each main concept
-        self::addMainDataData($connectedComponents, $enhancedResults);
+        //self::addMainDataData($connectedComponents, $enhancedResults);
         
         // Add additional data : complete data for each extern links
         self::addExternLinksData($connectedComponents, $googleResults);

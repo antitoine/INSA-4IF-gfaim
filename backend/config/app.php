@@ -18,10 +18,12 @@ const SEARCH_ENGINE_KEYS = array(
     1 => 'AIzaSyCPZQ6hboLZx-6rx9sRTh1e7mzzfXwK-fg',
     2 => 'AIzaSyBuS4S5W8vAkRajhQuy_Hv2CM6JPvfLbPo',
     3 => 'AIzaSyAiLHN42sSVAg418iQ5S81SLqkaFgPY8rk',
-    4 => 'AIzaSyCSPh3AAxZuKLvM5XNc5rS09yWKxXVKa9A'
+    4 => 'AIzaSyCSPh3AAxZuKLvM5XNc5rS09yWKxXVKa9A',
+    5 => 'AIzaSyCRrQOOrNMJLZt-Lhcuvgqm0x-rDXeqkyw',
+    6 => 'AIzaSyCzKQkRUD47ZZN9fy4Mhoo5oSWVxRdrccg'
 );
 
-const NUMBER_OF_SEARCH_ENGINE_KEYS = 4;
+const NUMBER_OF_SEARCH_ENGINE_KEYS = 7;
 
 /**
  * TextAnnotation Configuration
@@ -33,5 +35,5 @@ const SPOTLIGHT_CONFIDENCE = 2;
 /**
  * Cache DataBase
  */
-const CACHE_ENABLED = false;
+const CACHE_ENABLED = true;
 const DATABASE_ROOT = VAR_DIR . '/cache.sqlite3';

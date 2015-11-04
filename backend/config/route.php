@@ -23,9 +23,10 @@ Flight::route('/search', function(){
     $connectedComponents = GraphSimilarity::getConnectedComponentsJSON($enhancedResults, 0.5);
 
     Flight::json($connectedComponents);*/
-    //Flight::json(GFaimSearchEngine::search(Flight::request()->query['q']));
-    GFaimSearchEngine::search(Flight::request()->query['q']);
+    Flight::json(GFaimSearchEngine::search(Flight::request()->query['q']));
+    //GFaimSearchEngine::search(Flight::request()->query['q']);
 });
+
 
 Flight::route('/search/test', function(){
     Flight::json(SearchEngineExtraction::getResultLinksOfQuery(Flight::request()->query['q']));
