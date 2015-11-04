@@ -1,21 +1,9 @@
-gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
-    function ($scope, searchService, $log, $state) {
+gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state', '$timeout',
+    function ($scope, searchService, $log, $state, $timeout) {
 
         $scope.isSearching = false;
         $scope.results=[];
 
-        $scope.search = function () {
-            $scope.isSearching = true;
-            $scope.resetGraph();
-            $scope.nodes.add([
-                {id: 0, label: $scope.query, group: 0}
-            ]);
-            //searchService.search($scope.query)
-            //    .then(function(result){
-            //        $scope.results.length = 0;
-            //        $scope.results = result;
-            //    })
-        };
 
         $scope.externalLinks = [
             {
@@ -76,6 +64,10 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
         $scope.resetGraph = function(){
             $scope.nodes.clear();
             $scope.edges.clear();
+            isConceptsShowing = false;
+            for(var index in conceptsInfos){
+                conceptsInfos[index].isShowing = false;
+            }
         };
 
         $scope.onNodeSelect = function(params) {
@@ -87,15 +79,23 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
                     $scope.addConcepts();
                     isConceptsShowing = true;
                 }
-                if(selected != 0 && !conceptsInfos[selected].isShowing){
+                if(conceptsInfos[selected]){
+                    if(selected != 0 && !conceptsInfos[selected].isShowing){
+                        clickConcept(selected);
+                    } else{
+                        var connectedNodes = $scope.network.getConnectedNodes(selected);
+                        for(var i = 0; i < connectedNodes.length; i++){
+                            if(connectedNodes !== 0){
+                                $scope.nodes.remove({id: connectedNodes[i]});
+                            }
+                            conceptsInfos[selected].isShowing = false;
+                        }
+                    }
+                } else {
                     clickConcept(selected);
                 }
             }
-            var options = {offset: {x:0,y:0},
-                duration: 2000,
-                easingFunction: "easeInOutQuad"
-            };
-            $scope.network.fit({animation:options});
+            $scope.redraw(3000);
         };
 
         var clickConcept = function(groupid){
@@ -115,6 +115,32 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
                 );
             }
         };
+
+
+        $scope.search = function () {
+            $scope.isSearching = true;
+            $scope.resetGraph();
+            $scope.nodes.add([
+                {id: 0, label: $scope.query, group: 0}
+            ]);
+            //searchService.search($scope.query)
+            //    .then(function(result){
+            //        $scope.results.length = 0;
+            //        $scope.results = result;
+            //    })
+        };
+
+        $scope.redraw = function(time){
+            timeout = time || 500;
+            $timeout(function() {
+                var options = {offset: {x:0,y:0},
+                    duration: 1000,
+                    easingFunction: "easeInOutQuad"
+                };
+                $scope.network.fit({animation:options});
+            }, timeout);
+        }
+
 
     }]);
 
