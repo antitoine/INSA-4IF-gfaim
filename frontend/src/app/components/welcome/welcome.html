@@ -2,16 +2,16 @@
     <section class="bg-primary welcome" id="about" ng-class="{'ontop': isSearching}">
         <div class="container">
             <div class="row">
-                <div class="col-lg-6 col-lg-offset-3 text-center">
-                    <h2 class="section-heading">GFAIM !</h2>
+                <div class="col-md-6 col-md-offset-3 text-center">
+                    <h2 class="">GFAIM !</h2>
                     <hr style="visibility: hidden" class="light">
                     <p class="text-faded"></p>
-                    <form ng-submit="search()">
+                    <form>
                         <div class="input-group">
-                            <input ng-model='query' placeholder="ex: Apple" type="text" id="search"
+                            <input ng-model='query' placeholder="ex: Tomato Soup" type="text" id="search"
                                    class="form-control">
                     <span class="input-group-btn">
-                         <button class="btn btn-default" type="submit">Rechercher</button>
+                         <button ng-click="search()" class="btn btn-default" >Search</button>
                     </span>
                         </div>
                     </form>
@@ -20,7 +20,25 @@
         </div>
     </section>
 
-    <section ng-show="isSearching" id="result" class="result">
+    <section style="text-align: center" ng-show="searchingInProcess">
+        <h1 >{{loadingText}}</h1>
+        <p>{{loadingSubText}}</p>
+        <svg height="400" width="400" id="preloader">
+            <g filter="url(#goo)">
+                <circle class="outer" cx="200" cy="200" r="150" />
+                <circle class="drop" cx="200" cy="200" r="15">
+            </g>
+
+            <defs>
+                <filter id="goo">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
+                    <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo" />
+                </filter>
+            </defs>
+        </svg>
+    </section>
+
+    <section ng-show="searchingDone" id="result" class="result">
         <!-- Button trigger modal -->
         <div class="row" style="margin-bottom: 30px; text-align: center; ">
             <div class="col-md-4 col-md-offset-4">
@@ -32,14 +50,13 @@
 
         </div>
 
-        <div ng-repeat="element in externalLinks">
-                <search-result title="coucou"
-                               img="https://www.wonderplugin.com/wp-content/plugins/wonderplugin-lightbox/images/demo-image0.jpg"
-                               main-description="test de descriptioin test de descriptiointest de descriptiointest de descriptioin
-                               ..." >
-                    <div ng-repeat="element in externalLinks">
-                        <h4><a href="element.url">{{element.title}}</a></h4>
-                        <p>{{element.description}}</p>
+        <div ng-show="searchingDone" ng-repeat="element in results">
+                <search-result title={{element.mainConcept.name}}
+                               img={{element.mainConcept.image}}
+                               main-description={{element.mainConcept.description}} >
+                    <div ng-repeat="link in element.externLinks">
+                        <h4><a href={{link.url}}>{{link.url}}</a></h4>
+                        <p>{{link.url}}</p>
                     </div>
                 </search-result>
             </div>
@@ -48,7 +65,7 @@
 
 
     <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div style="display: none" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" style="width: 1024px" role="document">
             <div class="modal-content">
                 <div class="modal-header">
