@@ -205,6 +205,9 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
 
         $scope.search = function () {
             iterateSearch(3);
+            $scope.loadingText = "Loading ...";
+            $scope.loadingSubText= "This could take a while";
+
             $scope.isSearching = true;
             $scope.searchingInProcess = true;
             $scope.resetGraph();
