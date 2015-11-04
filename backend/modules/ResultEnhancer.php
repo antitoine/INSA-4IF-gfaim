@@ -30,7 +30,7 @@ class ResultEnhancer {
     }
     
     private static function requestTripleFromPredicate($uri, $p) {
-        return "SELECT ?s ?p ?o WHERE { ?s $p ?o. FILTER(?s in (<$uri>)) } ";
+        return "SELECT ?s ?p ?o WHERE { ?s $p ?o. FILTER(?s in (<$uri>) && (LANG(?o)='en' || LANG(?o)='' )) } ";
     }
     private static function formatTripleFromPredicate($triple, $p) {
         return "&lt;" . $triple->s->value . "&gt; &lt" . $p . "&gt; &lt;" . $triple->o->value . "&gt; <br/>";
@@ -73,15 +73,22 @@ class ResultEnhancer {
      * @param array $requiredPredicates
      *      Array of predicates to use to enhance graph
      */
-    public static function Process($results, $requiredPredicates = array("dbp:fat", "dbp:kj")) {
+    public static function Process($results, $requiredPredicates = array("rdfs:label", 
+                                                                        "rdfs:comment",
+                                                                        "foaf:isPrimaryTopicOf",
+                                                                        "dbo:thumbnail", 
+                                                                        "dbp:imageCaption", 
+                                                                        "dbp:fat", 
+                                                                        "dbp:protein",
+                                                                        "dbp:calciumMg",
+                                                                        "dbp:kj")) {
         // Execution des requetes
         $requests = array();
-        $allTriples = array(); 
         
         $resultProcess = array();
-        
         // Foreach list of uris
         foreach($results as $url => $uris) {
+            $allTriples = array(); 
             // Foreach uri in the array  
             foreach($uris as $word => $uri) {
                 // Foreach predicate to find
@@ -92,10 +99,8 @@ class ResultEnhancer {
                     }
                 }
             }
-            
             $resultProcess[$url] = $allTriples;
-        }    
-        
+        }
         return $resultProcess;
     }
     
@@ -103,10 +108,6 @@ class ResultEnhancer {
      * @brief Test function associated to Process function
      */ 
     public static function ProcessTest(){
-        
-        //
-        $REQUIRED_PREDICATES = array("dbp:fat", "dbp:kj");
-    
         // Tableau des URI générées par le module 3
         // Recette : riz petits pois et herbes de provence
         $RESULTS = array(
@@ -118,14 +119,14 @@ class ResultEnhancer {
                 ),
             "http://www.miam.fr/recette/sandwich_poisson" => 
             array(
-                'bread' => 'http://dbpedia.org/page/Bread',
-                'butter' => 'http://dbpedia.org/page/Butter',
-                'tomato' => 'http://dbpedia.org/page/Tomato',
-                'emmental' => 'http://dbpedia.org/page/Emmental_cheese',
-                'lettuce' => 'http://dbpedia.org/page/Lettuce'
+                'bread' => 'http://dbpedia.org/resource/Bread',
+                'butter' => 'http://dbpedia.org/resource/Butter',
+                'tomato' => 'http://dbpedia.org/resource/Tomato',
+                'emmental' => 'http://dbpedia.org/resource/Emmental_cheese',
+                'lettuce' => 'http://dbpedia.org/resource/Lettuce'
             )
         );
 
-        return self::Process($RESULTS, $REQUIRED_PREDICATES);
+        return self::Process($RESULTS);
     }
 }
