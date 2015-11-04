@@ -48,5 +48,5 @@ Flight::route('/similarity/test', function () {
 });
 
 Flight::route('/gfaim/test', function () {
-    GFaimSearchEngine::search(Flight::request()->query['q']);
+    Flight::json(GFaimSearchEngine::search(Flight::request()->query['q']));
 });
