@@ -1,7 +1,7 @@
 <?php
 
 class GFaimSearchEngine {
-    
+    /*
     private static function getConceptData(&$rdfData, $conceptUri) {
         $label = '';
         $image = '';
@@ -42,10 +42,10 @@ class GFaimSearchEngine {
             'image' => $image,
             'imageCaption' => $imageCaption
         );
-    }
+    }*/
     
     private static function addMainDataData(&$finalData, &$rdfData) {
-        foreach ($finalData as $key => $connectedComponent) {
+        /*foreach ($finalData as $key => $connectedComponent) {
             $mainConceptURI = $connectedComponent['mainConcept']['uri'];
             
             if (!empty($mainConceptURI)) {
@@ -58,35 +58,73 @@ class GFaimSearchEngine {
                     'description' => $dataMainConception['comment']
                 );
             }
+        }*/
+        
+        foreach ($finalData as $key => $connectedComponent) {
+            $mainConceptURI = $connectedComponent['mainConcept']['uri'];
+            
+            if (!empty($mainConceptURI)) {
+                //$dataMainConception = self::getConceptData($mainConceptURI);
+                $finalData[$key]['mainConcept'] = array(
+                    'name' => 'name',
+                    'uri' => $mainConceptURI,
+                    'image' => 'http://dbpedia.org/statics/dbpedia_logo.png',
+                    'imageCaption' => 'image caption',
+                    'description' => 'my description'
+                );
+            }
+        }
+    }
+    
+    public static function addExternLinksData(&$finalData, &$googleResults) {
+        foreach ($finalData as $key => $connectedComponent) {
+            echo '<pre>';
+            var_dump($connectedComponent['externLinks']);
+            echo '</pre>';
+            
+            /*$url = $connectedComponent['externLinks']['url'];
+            
+            if (!empty($url)) {
+                $urlDetails = $googleResults[$url];
+                
+                $finalData[$key]['externLinks'] = array(
+                    'url' => $url,
+                    'title' => $urlDetails['title'],
+                    'description' => $urlDetails['description']
+                );
+            }*/
         }
     }
     
     public static function search($query, $thresholdSimilarity = 0.2) {
         
+        $googleResults = SearchEngineExtraction::getResultLinksOfQuery($query);
+        
         $annotatedUrls = TextAnnotation::annotateTexts(
                             TextExtractor::getAllText(
-                                SearchEngineExtraction::getResultLinksOfQuery(
-                                    $query
-                                )
+                                array_keys($googleResults)
                             )
                         );
                     
         $enhancedResults = ResultEnhancer::Process($annotatedUrls);
     
-   //     $connectedComponents = GraphSimilarity::getConnectedComponentsJSON($enhancedResults, $thresholdSimilarity);
+        $connectedComponents = GraphSimilarity::getConnectedComponentsJSON($enhancedResults, $thresholdSimilarity);
     
     //echo '<pre>';
     //var_dump($connectedComponents);
     //echo '</pre>';
     
         // Add additional data : complete data for each main concept
-       /// self::addMainDataData($connectedComponents, $enhancedResults);
+        self::addMainDataData($connectedComponents, $enhancedResults);
+        
+        // Add additional data : complete data for each extern links
+        self::addExternLinksData($connectedComponents, $googleResults);
         
         
        // echo '--------------------------------------------------------------------------<br><pre>';
     //var_dump($connectedComponents);
     //echo '</pre>';*/
 
-        return $enhancedResults;
+        return $connectedComponents;
     }
 }

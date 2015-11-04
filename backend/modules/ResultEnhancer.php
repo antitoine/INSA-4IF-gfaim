@@ -10,6 +10,19 @@ class ResultEnhancer {
     const GRAPH_URI = "http://dbpedia.org";
     const RESULT_ONLY = TRUE;
     
+    //SPARQL config
+    const RSPARQL_PATH = '/opt/apache-jena-3.0.0/bin/';
+    const SPARQL_QUERY_FILEPATH = '/var/www/gfaim/backend/var/result_enhancer_query/query.sparql'; 
+    const SPARQL_ENDPOINT = 'http://dbpedia.org/sparql';
+    // 
+    // ASK et SELECT formats : 
+    //      json,text,xml,csv,tsv
+    // 
+    // CONSTRUCT et DESCRIBES formats :
+    //      turtle,rdf,n-tuples
+    //
+    const SPARQL_RESULT_FORMAT = 'json'; 
+    
     // -------------------------------------------------------------------------
     
     private static function buildHTTPRequest($sparqlQuery) {
@@ -19,6 +32,21 @@ class ResultEnhancer {
                 "&format=".self::REQUEST_OUTPUT_FORMAT.
                 "&timeout=".self::TIMEOUT;
     }
+    
+    /**
+     * @brief Executes a SPARQL query using 
+     * @param string $sparqlQuery
+     *      SPARQL query to execute
+     * @return Query response with the format specified using SPARQL_RESULT_FORMAT
+     */
+    private static function execSPARQLQuery( $sparqlQuery ) {
+        // Writes the given query in the file
+        file_put_contents(self::SPARQL_QUERY_FILEPATH, $sparqlQuery);
+        // Execute SPARQL query
+        $cmd = self::RSPARQL_PATH."rsparql --service ".self::SPARQL_ENDPOINT." --query ".self::SPARQL_QUERY_FILEPATH." --results ".self::SPARQL_RESULT_FORMAT;
+        return system($cmd);
+    }
+    
     
     // Fonction creation de requete 
     private static function getTriplesLinkedToURI($uri) {
@@ -32,12 +60,26 @@ class ResultEnhancer {
     private static function requestTripleFromPredicate($uri, $p) {
         return "SELECT ?s ?p ?o WHERE { ?s $p ?o. FILTER(?s in (<$uri>) && (LANG(?o)='en' || LANG(?o)='' )) } ";
     }
+    
+    private static function requestAllTriples($uri) {
+        return "SELECT ?s ?p ?o WHERE { ?s ?p ?o. FILTER(?s in (<$uri>) && (LANG(?o)='en' || LANG(?o)='' )) } ";
+    }
+    
     private static function formatTripleFromPredicate($triple, $p) {
         return "&lt;" . $triple->s->value . "&gt; &lt" . $p . "&gt; &lt;" . $triple->o->value . "&gt; <br/>";
     }
     
     private static function getRecipesLinkedToURI($uri) {
         return "SELECT ?recipe WHERE {   ?recipe dbo:ingredient dbr:". end(explode('/', $uri)) ." } ";
+    }
+    
+    public static function getGeneralInfos($uri) {
+        $predicates = array("http://www.w3.org/2000/01/rdf-schema#label",
+                            "http://www.w3.org/2000/01/rdf-schema#comment",
+                            "http://xmlns.com/foaf/0.1/isPrimaryTopicOf",
+                            "http://dbpedia.org/ontology/thumbnail",
+                            "http://dbpedia.org/property/imageCaption");
+        return getAllTriples($uri, $predicates);
     }
     
     // Do not use it separately - used in getTriplesFromPredicate
@@ -60,9 +102,39 @@ class ResultEnhancer {
     
     // Returns an array of all triples found for a predicate on a uri
     private static function getTripleFromPredicate($uri, $predicate) {
+        /* Deprecated
         $query = self::buildHTTPRequest(self::requestTripleFromPredicate($uri, $predicate));
-        $response = file_get_contents($query);
+        $response = file_get_contents($query);*/
+        $response = self::execSPARQLQuery(self::requestTripleFromPredicate($uri, $predicate));
         $triples = self::constructTriplesFromPredicate($response, $predicate);
+        return $triples;
+    }
+    
+    // Do not use it separately - used in getTriplesFromPredicate
+    private static function constructAllTriples($response, $predicates) {
+        // convert json response to php object
+        $spo_triples = json_decode($response);
+        $triples = (array)$spo_triples->results->bindings;
+        
+        // format triples to a clean array
+        $formattedTriples = array();
+        foreach($triples as $triple) {
+           
+            if( in_array($triple->p->value, $predicates) ) {
+                $formattedTriples = array_merge(
+                    $formattedTriples,
+                    array( array($triple->s->value, $triple->p->value, $triple->o->value) )
+                );   
+            }
+        }
+        return $formattedTriples;
+    }
+    
+    // Returns an array of all triples found for a predicate on a uri
+    private static function getAllTriples($uri, $predicates) {
+        $query = self::buildHTTPRequest(self::requestAllTriples($uri));
+        $response = file_get_contents($query);
+        $triples = self::constructAllTriples($response, $predicates);
         return $triples;
     }
     
@@ -73,15 +145,16 @@ class ResultEnhancer {
      * @param array $requiredPredicates
      *      Array of predicates to use to enhance graph
      */
-    public static function Process($results, $requiredPredicates = array("rdfs:label", 
+    public static function Process($results, $predicates = array("http://www.w3.org/2000/01/rdf-schema#label",
+                                                                        "http://dbpedia.org/property/fat", 
+                                                                        "http://dbpedia.org/property/protein",
+                                                                        "http://dbpedia.org/property/calciumMg",
+                                                                        "http://dbpedia.org/property/kj")) {
+                                                                            /* 
                                                                         "rdfs:comment",
                                                                         "foaf:isPrimaryTopicOf",
                                                                         "dbo:thumbnail", 
-                                                                        "dbp:imageCaption", 
-                                                                        "dbp:fat", 
-                                                                        "dbp:protein",
-                                                                        "dbp:calciumMg",
-                                                                        "dbp:kj")) {
+                                                                        "dbp:imageCaption", */
         // Execution des requetes
         $requests = array();
         
@@ -91,12 +164,16 @@ class ResultEnhancer {
             $allTriples = array(); 
             // Foreach uri in the array  
             foreach($uris as $word => $uri) {
-                // Foreach predicate to find
+                /*// Foreach predicate to find
                 foreach($requiredPredicates as $predicate) {
                     $triples = self::getTripleFromPredicate($uri, $predicate);
                     if(!empty($triples)) {
                         $allTriples = array_merge($allTriples, $triples);
                     }
+                }*/
+                $triples = self::getAllTriples($uri, $predicates);
+                if(!empty($triples)) {
+                    $allTriples = array_merge($allTriples, $triples);
                 }
             }
             $resultProcess[$url] = $allTriples;

@@ -245,6 +245,8 @@ class Graph
 				'id' => $idNode,
 				'label' => $currentNode
 			);
+			
+			$idNode++;
 		}
 		
 		$result['nodes'] = $nodes;

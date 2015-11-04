@@ -27,11 +27,13 @@ class GraphSimilarity
         $conceptsOccurs = array();
         
         foreach ($urls as $url) {
-            foreach ($this->graphConcepts[$url] as $concept => $occurs) {
-                if (!isset($conceptsOccurs[$concept])) {
-                    $conceptsOccurs[$concept] = $occurs;
-                } else {
-                    $conceptsOccurs[$concept] += $occurs;
+            if (isset($this->graphConcepts[$url])) {
+                foreach ($this->graphConcepts[$url] as $concept => $occurs) {
+                    if (!isset($conceptsOccurs[$concept])) {
+                        $conceptsOccurs[$concept] = $occurs;
+                    } else {
+                        $conceptsOccurs[$concept] += $occurs;
+                    }
                 }
             }
         }
