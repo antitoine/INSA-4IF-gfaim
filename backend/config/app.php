@@ -17,7 +17,8 @@ const SEARCH_ENGINE_KEYS = array(
     0 => 'AIzaSyASK1nR0p8Mjx4Fw9XHvMI-m20xSbtAwnc',
     1 => 'AIzaSyCPZQ6hboLZx-6rx9sRTh1e7mzzfXwK-fg',
     2 => 'AIzaSyBuS4S5W8vAkRajhQuy_Hv2CM6JPvfLbPo',
-    3 => 'AIzaSyAiLHN42sSVAg418iQ5S81SLqkaFgPY8rk'
+    3 => 'AIzaSyAiLHN42sSVAg418iQ5S81SLqkaFgPY8rk',
+    4 => 'AIzaSyCSPh3AAxZuKLvM5XNc5rS09yWKxXVKa9A'
 );
 
 const NUMBER_OF_SEARCH_ENGINE_KEYS = 4;
@@ -32,4 +33,5 @@ const SPOTLIGHT_CONFIDENCE = 2;
 /**
  * Cache DataBase
  */
+const CACHE_ENABLED = false;
 const DATABASE_ROOT = VAR_DIR . '/cache.sqlite3';
