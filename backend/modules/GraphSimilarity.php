@@ -23,26 +23,40 @@ class GraphSimilarity
     private function getMainConceptOfConnectedComponent($connectedComponentGraph) {
         $urls = $connectedComponentGraph->getListOfNodes();
         
-        var_dump($this->graphConcepts);
-        
         // Sum the concepts occurences
         $conceptsOccurs = array();
         
         foreach ($urls as $url) {
-            foreach ($this->graphConcepts[$url] as $concept => $occurs) {
-                if (!isset($conceptsOccurs[$concept])) {
-                    $conceptsOccurs[$concept] = $occurs;
-                } else {
-                    $conceptsOccurs[$concept] += $occurs;
+            if (isset($this->graphConcepts[$url])) {
+                foreach ($this->graphConcepts[$url] as $concept => $occurs) {
+                    if (!isset($conceptsOccurs[$concept])) {
+                        $conceptsOccurs[$concept] = $occurs;
+                    } else {
+                        $conceptsOccurs[$concept] += $occurs;
+                    }
                 }
             }
+        }
+        
+        if (empty($conceptsOccurs)) {
+            return '';
         }
         
         // Get the max value of concept counter
         $maxCounter = max(array_values($conceptsOccurs));
         
         // Get the matching concepts
-        return array_search($maxCounter, $conceptsOccurs);
+        $mainConcept = array_search($maxCounter, $conceptsOccurs);
+        
+        $this->removeConcept($mainConcept);
+        
+        return $mainConcept;
+    }
+    
+    private function removeConcept($concept) {
+        foreach ($this->graphConcepts as $url => $conceptsArray) {
+            unset($this->graphConcepts[$url][$concept]);
+        }
     }
     
     /**
@@ -134,12 +148,19 @@ class GraphSimilarity
         return $connectedComponentsGraph;
     }
     
+    private static function compareConnectedComponentsGraphs($connectedComponent1, $connectedComponent2) {
+        return $connectedComponent2->nodeCount() - $connectedComponent1->nodeCount();
+    }
+    
     public static function getConnectedComponentsJSON(array $rdfResults, $similarityThreshold)
     {
         $graphSimilarity = new GraphSimilarity();
         
         // Compute and get the connected components graph 
         $connectedComponentsGraph = $graphSimilarity->computeGlobalGraphResults($rdfResults, $similarityThreshold);
+        
+        // Sort the connected components graphs by graph size
+        uasort($connectedComponentsGraph, 'self::compareConnectedComponentsGraphs');
         
         // Create the array to return
         $connectedComponentsList = array();
@@ -197,9 +218,11 @@ class GraphSimilarity
             )
         );
         
-        $rdfGraphsTest = ResultEnhancer::ProcessTest();
+        //echo 'ResultEnhancer::ProcessTest___________________<br>';
         
-        return GraphSimilarity::getConnectedComponentsJSON($rdfGraphsTest, 0.1);
+        //$rdfGraphsTest = ResultEnhancer::ProcessTest();
+        
+        return GraphSimilarity::getConnectedComponentsJSON($rdfGraphs, 0.1);
     }
 }
 

@@ -10,7 +10,7 @@ Flight::route('/test', 'test');
 
 Flight::route('/search', function(){
     
-    $annotatedUrls = TextAnnotation::annotateTexts(
+    /*$annotatedUrls = TextAnnotation::annotateTexts(
                         TextExtractor::getAllText(
                             SearchEngineExtraction::getResultLinksOfQuery(
                                 Flight::request()->query['q']
@@ -22,7 +22,9 @@ Flight::route('/search', function(){
     
     $connectedComponents = GraphSimilarity::getConnectedComponentsJSON($enhancedResults, 0.5);
 
-    Flight::json($connectedComponents);
+    Flight::json($connectedComponents);*/
+    //Flight::json(GFaimSearchEngine::search(Flight::request()->query['q']));
+    GFaimSearchEngine::search(Flight::request()->query['q']);
 });
 
 Flight::route('/search/test', function(){
@@ -32,6 +34,7 @@ Flight::route('/search/test', function(){
 Flight::route('/annotate/test', function () {
     Flight::json(TextAnnotation::annotateTextsTest());
 });
+
 
 Flight::route('/extract/test', function () {
     Flight::json(TextExtractor::getAllTextTest());
@@ -48,5 +51,5 @@ Flight::route('/similarity/test', function () {
 });
 
 Flight::route('/gfaim/test', function () {
-    GFaimSearchEngine::search(Flight::request()->query['q']);
+    Flight::json(GFaimSearchEngine::search(Flight::request()->query['q']));
 });

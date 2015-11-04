@@ -25,7 +25,7 @@ class TextExtractor
         {
             $clearUrl = stripslashes($url);
             
-            $textOfUrlCached = $cache->getTextByUrl($clearUrl);
+            $textOfUrlCached = $cache->getSingleResultOfModuleTwoByUrl($clearUrl);
         
             if ($textOfUrlCached)
             {
@@ -45,7 +45,7 @@ class TextExtractor
                     {
                         $urlTextList[$clearUrl] = self::getTextFromHtml($html);
                         
-                        $cache->setTextUrl($clearUrl, $urlTextList[$clearUrl]);
+                        $cache->setSingleResultInModuleTwo($clearUrl, $urlTextList[$clearUrl]);
                     }
                 }
 

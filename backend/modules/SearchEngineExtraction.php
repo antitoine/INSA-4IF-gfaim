@@ -14,9 +14,8 @@ class SearchEngineExtraction
      */
     public static function getResultLinksOfQuery($query, $APIKeyNumber = 0)
     {
-
         $cache = Cache::getInstance();
-        $resultOfQueryCached = $cache->getResultsSearchByQuery($query);
+        $resultOfQueryCached = $cache->getResultListOfModuleOneByQuery($query);
         
         if (!empty($resultOfQueryCached))
         {
@@ -39,7 +38,7 @@ class SearchEngineExtraction
         {
             if ($APIKeyNumber < NUMBER_OF_SEARCH_ENGINE_KEYS)
             {
-                self::getResultLinksOfQuery($query, $APIKeyNumber + 1);
+                return self::getResultLinksOfQuery($query, $APIKeyNumber + 1);
             }
             else
             {
@@ -49,11 +48,13 @@ class SearchEngineExtraction
 
         foreach ($googleResultsJSON->{'items'} as $item)
         {
-            $links[] = $item->{'link'};
+            $links[$item->{'link'}] = array(
+                'title' => $item->{'title'},
+                'description' => $item->{'title'}
+            ); 
         }
 
-
-        $cache->setResultsSearchQuery($query, $links);
+        $cache->setResultListInModuleOne($query, $links);
 
         return $links;
     }
