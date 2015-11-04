@@ -2,8 +2,8 @@
 
 /******************** Routes Configuration ********************/
 
-Flight::route('/', function(){
-    echo 'API GFaim';
+Flight::route('/', function() {
+    include('home.php');
 });
 
 Flight::route('/test', 'test');
@@ -21,12 +21,7 @@ Flight::route('/search', function(){
     $enhancedResults = ResultEnhancer::Process($annotatedUrls);
     
     $connectedComponents = GraphSimilarity::getConnectedComponentsJSON($enhancedResults, 0.5);
-    
-    //echo '<pre>';
-    //var_dump($connectedComponents);
-    //echo '</pre>';
-    
-    
+
     Flight::json($connectedComponents);
 });
 
@@ -46,4 +41,12 @@ Flight::route('/enhance/test', function () {
     Flight::json(ResultEnhancer::ProcessTest());
 });
 
-?>
+Flight::route('/similarity/test', function () {
+    echo '<pre>';
+    var_dump(GraphSimilarity::getConnectedComponentsJSONTest());
+    echo '</pre>';
+});
+
+Flight::route('/gfaim/test', function () {
+    GFaimSearchEngine::search(Flight::request()->query['q']);
+});

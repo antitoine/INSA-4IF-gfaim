@@ -1,11 +1,50 @@
 <?php
 
 /**
- * Static class with methods to compare the similarities between rdg graphs, in
+ * Class with methods to compare the similarities between rdg graphs, in
  * order to group the results by main concept groups.
  */
 class GraphSimilarity
 {
+    private $graphConcepts;
+    
+    private function __construct() {
+        $this->graphConcepts = array();
+    }
+    
+    private function addConceptToUrl($url, $concept) {
+        if (isset($this->graphConcepts[$url][$concept])) {
+            $this->graphConcepts[$url][$concept]++;
+        } else {
+            $this->graphConcepts[$url][$concept] = 0;
+        }
+    }
+    
+    private function getMainConceptOfConnectedComponent($connectedComponentGraph) {
+        $urls = $connectedComponentGraph->getListOfNodes();
+        
+        var_dump($this->graphConcepts);
+        
+        // Sum the concepts occurences
+        $conceptsOccurs = array();
+        
+        foreach ($urls as $url) {
+            foreach ($this->graphConcepts[$url] as $concept => $occurs) {
+                if (!isset($conceptsOccurs[$concept])) {
+                    $conceptsOccurs[$concept] = $occurs;
+                } else {
+                    $conceptsOccurs[$concept] += $occurs;
+                }
+            }
+        }
+        
+        // Get the max value of concept counter
+        $maxCounter = max(array_values($conceptsOccurs));
+        
+        // Get the matching concepts
+        return array_search($maxCounter, $conceptsOccurs);
+    }
+    
     /**
      * Calculate the similarity index between two rdf data lists, using the
      * jaccard similarity index.
@@ -17,7 +56,7 @@ class GraphSimilarity
      * rdf triples).
      * @return The similarity index.
      */
-    private static function getSimilarityIndex(array $rdfDataList1, array $rdfDataList2)
+    private function getSimilarityIndex($url1, array $rdfDataList1, $url2, array $rdfDataList2)
     {
          
         // If both rdf data are empty, the jaccard index is equals to 1.
@@ -32,6 +71,7 @@ class GraphSimilarity
         foreach ($rdfDataList1 as $rdfData)
         {
             $nodesList1[] = $rdfData[0] . '-' . $rdfData[1] . '-' . $rdfData[2];
+            $this->addConceptToUrl($url1, $rdfData[0]);
         }
         
         // Create the nodes of the rdf data list 2
@@ -40,6 +80,7 @@ class GraphSimilarity
         foreach ($rdfDataList2 as $rdfData) 
         {
             $nodesList2[] = $rdfData[0] . '-' . $rdfData[1] . '-' . $rdfData[2];
+            $this->addConceptToUrl($url2, $rdfData[0]);
         }
 
         $nodesIntersect = array_intersect($nodesList1, $nodesList2);
@@ -47,15 +88,14 @@ class GraphSimilarity
         $nodesUnion = array_unique(array_merge($nodesList1, $nodesList2));
 
         // Compute the jaccard index
-        $jaccard = count($nodesIntersect) / count($nodesUnion); 
-        
-        return $jaccard;
+        return count($nodesIntersect) / count($nodesUnion);
     }
     
-    
-    public static function computeGlobalGraphResults(array $rdfGraphs, $similarityThreshold)
+    private function computeGlobalGraphResults(array $rdfGraphs, $similarityThreshold)
     {
         $globalGraph = new Graph();
+        
+        $graphAlreadyComputed = array();
         
         foreach ($rdfGraphs as $urlGraph1 => $rdfGraph)
         {
@@ -63,24 +103,30 @@ class GraphSimilarity
             {
                 if ($urlGraph1 != $urlGraph2)
                 {
-                    $similarity = self::getSimilarityIndex($rdfGraph, $rdfGraph2);
+                    // If the similarity is not already checked
+                    if (!isset($graphAlreadyComputed[$urlGraph1.$urlGraph2])
+                     && !isset($graphAlreadyComputed[$urlGraph2.$urlGraph1])) {
+                         
+                        $similarity = $this->getSimilarityIndex($urlGraph1, $rdfGraph, $urlGraph2, $rdfGraph2);
                     
-                    //echo $urlGraph1 . ' vs ' . $urlGraph2 . '<br>';
-                    //echo $similarity . ' / ' . $similarityThreshold . '<br>';
-
-                    // Add the arc to ne global graph results
-                    if ($similarity >= $similarityThreshold)
-                    {
-                        $globalGraph->addEdge($urlGraph1, $urlGraph2, $similarity);
-                    }
-                    else 
-                    {
-                        $globalGraph->addNode($urlGraph1);
-                        $globalGraph->addNode($urlGraph2);
+                        //echo $urlGraph1 . ' vs ' . $urlGraph2 . '<br>';
+                        //echo $similarity . ' / ' . $similarityThreshold . '<br>';
+    
+                        // Add the arc to ne global graph results
+                        if ($similarity >= $similarityThreshold)
+                        {
+                            $globalGraph->addEdge($urlGraph1, $urlGraph2, $similarity);
+                        }
+                        else 
+                        {
+                            $globalGraph->addNode($urlGraph1);
+                            $globalGraph->addNode($urlGraph2);
+                        }
+                        
+                        $graphAlreadyComputed[$urlGraph1.$urlGraph2] = true;
                     }
                 }
             }
-            
         }
         
         $connectedComponentsGraph = $globalGraph->getConnectedComponentsAsGraphs();
@@ -90,18 +136,40 @@ class GraphSimilarity
     
     public static function getConnectedComponentsJSON(array $rdfResults, $similarityThreshold)
     {
+        $graphSimilarity = new GraphSimilarity();
+        
         // Compute and get the connected components graph 
-        $connectedComponentsGraph = self::computeGlobalGraphResults($rdfResults, $similarityThreshold);
+        $connectedComponentsGraph = $graphSimilarity->computeGlobalGraphResults($rdfResults, $similarityThreshold);
         
         // Create the array to return
-        $arrayJSON = array();
+        $connectedComponentsList = array();
         
         foreach ($connectedComponentsGraph as $graph) 
         {
-            $arrayJSON[] = $graph->asArray(); 
+            $connectedComponent = array();
+            
+            // Set the graph
+            $connectedComponent['graph'] = $graph->asArray();
+            
+            // Detect and set the main concept of the connected component
+            $mainConcept = $graphSimilarity->getMainConceptOfConnectedComponent($graph);
+            $connectedComponent['mainConcept'] = array(
+                'uri' => $mainConcept
+            );
+            
+            // Set the external links
+            $externLinks = array();
+            foreach ($graph->getListOfNodes() as $url) {
+                $externLinks[] = array(
+                    'url' => $url
+                );
+            }
+            $connectedComponent['externLinks'] = $externLinks;
+            
+            $connectedComponentsList[] = $connectedComponent;
         }
         
-        return $arrayJSON;
+        return $connectedComponentsList;
     }
     
     public static function getConnectedComponentsJSONTest()

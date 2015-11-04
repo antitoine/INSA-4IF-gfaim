@@ -14,7 +14,7 @@ class TextAnnotation
      */
     public static function annotate($text)
     {
-        $apiResults = Utils\Utils::CallAPI(
+        $apiResults = Utils::CallAPI(
             'POST', SPOTLIGHT_URL,
             'text=' . urlencode($text) . '&confidence='. SPOTLIGHT_CONFIDENCE .'&types=' . urlencode('freebase:food')
         );

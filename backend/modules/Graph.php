@@ -33,6 +33,10 @@ class Graph
 			$this->nodesColor[$name] = 0;
 		}
 	}
+	
+	public function getListOfNodes() {
+		return array_keys($this->adj_mat);
+	}
 
 	public function nodeCount()
 	{

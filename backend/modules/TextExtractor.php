@@ -1,14 +1,15 @@
 <?php
 
+/**
+ * Static class with methods to extract text of HTML page from an URL
+ */
 class TextExtractor
 {
 
     /**
      * List of accepted code in request
      */
-    private static $include_header_code = array(
-        '200'
-    );
+    private static $include_header_code = array('200');
 
     /**
      * Get the text from every URL contained in UrlList
@@ -17,22 +18,37 @@ class TextExtractor
      */
     public static function getAllText($urlList)
     {
+        $cache = Cache::getInstance();
+
         $urlTextList = array();
         foreach($urlList as $url)
         {
             $clearUrl = stripslashes($url);
-            $url_headers = @get_headers($clearUrl);
-            $code_header = explode(' ', $url_headers[0])[1];
-
-            if(in_array($code_header, self::$include_header_code) && !isset($urlTextList[$clearUrl]))
+            
+            $textOfUrlCached = $cache->getTextByUrl($clearUrl);
+        
+            if ($textOfUrlCached)
             {
-                $html = self::getHtmlOfURL($clearUrl);
-                $text = '';
-                if($html != null)
+                $urlTextList[$clearUrl] = $textOfUrlCached;
+            }
+            else
+            {
+
+                $url_headers = @get_headers($clearUrl);
+                $code_header = explode(' ', $url_headers[0])[1];
+    
+                if(in_array($code_header, self::$include_header_code) && !isset($urlTextList[$clearUrl]))
                 {
-                    $text = self::getTextFromHtml($html);
+                    $html = self::getHtmlOfURL($clearUrl);
+
+                    if($html != null)
+                    {
+                        $urlTextList[$clearUrl] = self::getTextFromHtml($html);
+                        
+                        $cache->setTextUrl($clearUrl, $urlTextList[$clearUrl]);
+                    }
                 }
-                $urlTextList[$clearUrl] = $text;
+
             }
         }
         return $urlTextList;
@@ -43,16 +59,8 @@ class TextExtractor
      * @param $url just one URL
      * @return text from the URL
      */
-    public static function getHtmlOfURL($url)
+    private static function getHtmlOfURL($url)
     {
-        /*$textFromURL = file_get_contents($url);
-        if($textFromURL == false)
-        { 
-            return null;
-        }
-        return $textFromURL;*/
-
-
         $ch = curl_init();
         $timeout = 1;
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -60,6 +68,7 @@ class TextExtractor
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
         $data = curl_exec($ch);
         curl_close($ch);
+        
         return $data;
     }
 
@@ -68,7 +77,7 @@ class TextExtractor
      * @param $html the html page
      * @return string the relevent text from html page
      */
-    public static function getTextFromHtml($html)
+    private static function getTextFromHtml($html)
     {
         $dom = new DOMDocument();
         @$dom->loadHTML($html);
@@ -88,6 +97,9 @@ class TextExtractor
         return $text;
     }
 
+    /**
+     * Get all text of tests urls (used to test this module)
+     */
     public static function getAllTextTest() {
         // getAllText (texte final récupéré pour toutes les url)
         return self::getAllText(array('http://allrecipes.com/recipe/7281/chocolate-cherry-cake-i/', 'http://www.pillsbury.com/recipes/chocolate-cherry-bars/15d6f3ce-21b3-43fb-8cb0-b33fb4177d3e'));
