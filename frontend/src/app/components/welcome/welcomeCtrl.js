@@ -5,7 +5,7 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
         $scope.searchingInProcess = false;
         $scope.searchingDone = false;
         $scope.results = [];
-
+        $scope.isCollapsed = true;
         $scope.loadingText = "Loading ...";
         $scope.loadingSubText= "This could take a while";
 
@@ -233,8 +233,7 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
                 };
                 $scope.network.fit({animation: options});
             }, timeout);
-        }
-
+        };
 
     }]);
 
