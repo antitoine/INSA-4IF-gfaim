@@ -6,7 +6,9 @@ gfaimApp.directive('searchResult', function () {
         scope: {
             title: '@',
             img: '@',
-            mainDescription: '@'
+            mainDescription: '@',
+            wiki: '@',
+            caption:'@'
         },
         link: function (scope, element, attrs) {},
         controller: function ($scope) {}

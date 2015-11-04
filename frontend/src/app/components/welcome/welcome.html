@@ -53,10 +53,12 @@
         <div ng-show="searchingDone" ng-repeat="element in results">
                 <search-result title={{element.mainConcept.name}}
                                img={{element.mainConcept.image}}
+                               caption={{element.mainConcept.imageCaption}}
+                               wiki={{element.mainConcept.wikipediaUrl}}
                                main-description={{element.mainConcept.description}} >
                     <div ng-repeat="link in element.externLinks">
-                        <h4><a href={{link.url}}>{{link.url}}</a></h4>
-                        <p>{{link.url}}</p>
+                        <h4><a href={{link.url}}>{{link.title}}</a></h4>
+                        <p>{{link.description}}</p>
                     </div>
                 </search-result>
             </div>
