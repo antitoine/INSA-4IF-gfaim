@@ -11,11 +11,11 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
 
         $scope.sliders = {
             similarity: {
-                sliderValue: 1.5,
+                sliderValue: 0.5,
                 min: 0,
-                step: 0.5,
+                step: 0.2,
                 max: 5,
-                value: 1.5
+                value: 0.5
             },
             confidence: {
                 sliderValue: 1,
