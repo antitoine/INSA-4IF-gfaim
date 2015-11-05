@@ -44,6 +44,16 @@
                         </form>
                     </div>
                 </div>
+                <div class="module module-1-2 col-sm-12">
+                    <div class="well">
+                        <h3>Module 1 et 2 : Extract text from all URLs of a query</h3>
+                        <form action="/search/and/extract/test">
+                            <label for="queryModule1And2">Query to search</label>
+                            <input id="queryModule1And2" type="text" name="q"/>
+                            <button class="btn btn-default" type="submit">Submit</button>
+                        </form>
+                    </div>
+                </div>
                 <div class="module module-3 col-sm-6">
                     <div class="well">
                         <h3>Module 3 : Annotate relevent word from a text</h3>
