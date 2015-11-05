@@ -25,11 +25,11 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
                 value: 1
             },
             nbPages: {
-                sliderValue: 10,
+                sliderValue: 20,
                 min: 2,
                 step: 2,
                 max: 20,
-                value: 10
+                value: 20
             }
         };
 
