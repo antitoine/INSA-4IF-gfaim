@@ -5,6 +5,7 @@ class Graph
 	private $adj_mat;
 	private $edges;
 	private $nodes;
+	private $nodesId;
 
 	private $nodesColor;
 	private $maxColor;
@@ -17,6 +18,8 @@ class Graph
 
 		$this->nodesColor = array();
 		$this->maxColor = 0;
+		
+		$this->nodesId = array();
 	}	
 
 	public function nodeExists($name)
@@ -24,11 +27,18 @@ class Graph
 		return isset($this->adj_mat[$name]);
 	}
 
-	public function addNode($name)
+	public function addNode($name, $id = false)
 	{
 		if (!$this->nodeExists($name))
 		{
 			$this->adj_mat[$name] = array();
+			
+			if ($id == false) {
+				$this->nodesId[$name] = $this->nodes + 1;
+			} else {
+				$this->nodesId[$name] = $id;
+			}
+			
 			$this->nodes++;
 			$this->nodesColor[$name] = 0;
 		}
@@ -216,7 +226,7 @@ class Graph
 			
 			foreach ($nodes as $node)
 			{
-				$graph->addNode($node);
+				$graph->addNode($node, $this->nodesId[$node]);
 				
 				foreach ($this->adj_mat[$node] as $destNode => $weight)
 				{
@@ -238,15 +248,21 @@ class Graph
 		
 		// Set the nodes
 		$nodes = array();
-		$idNode = 1;
 		foreach ($allGraphNodes as $currentNode)
 		{
-			$nodes[] = array(
-				'id' => $idNode,
-				'label' => $currentNode
-			);
+			// Get the node short name
+			$shortName = $currentNode;
+			if (preg_match("/\/([^\/]+)$/", $currentNode, $matches))
+			{
+  				$shortName = $matches[1];
+  				$shortName = str_replace('_', ' ', $shortName);
+			}
 			
-			$idNode++;
+			$nodes[] = array(
+				'id' => $this->nodesId[$currentNode],
+				'title' => $currentNode,
+				'label' => $shortName
+			);
 		}
 		
 		$result['nodes'] = $nodes;
@@ -268,7 +284,7 @@ class Graph
 					$edges[] = array(
 						'from' => $idNodeFrom,
 						'to' => array_search($destNode, $allGraphNodes),
-						'label' => $weight
+						'title' => $weight
 					);
 					
 					$edgesAdded[] = $idNodeFrom . '-' . $idNodeTo;

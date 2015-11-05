@@ -196,7 +196,7 @@ class GraphSimilarity
     public static function getConnectedComponentsJSONTest()
     {
         $rdfGraphs = array(
-            'url 1' => array(
+            'aaaa/url_1' => array(
                 array('http://dbpedia.org/resource/Pea', 'dbp:f5at', '1.0'),
                 array('http://dbpedia.org/resource/Pea', 'dbp:fat', '0.4'),
                 array('http://dbpedia.org/resource/Pea', 'dbp:kj', '339'),

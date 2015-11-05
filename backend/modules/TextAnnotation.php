@@ -9,14 +9,15 @@ class TextAnnotation
 
     /**
      * Analyse the text passed by parameter and annotate it by calling dbpedia spotlight.
-     * @param text The text to inspect
+     * @param $text The text to inspect
+     * @param $confidence The level of confidence (between O and 1)
      * @return Associative array, key = the key word, value = the associated URI
      */
-    public static function annotate($text)
+    public static function annotate($text, $confidence = SPOTLIGHT_DEFAULT_CONFIDENCE)
     {
         $apiResults = Utils::CallAPI(
             'POST', SPOTLIGHT_URL,
-            'text=' . urlencode($text) . '&confidence='. SPOTLIGHT_CONFIDENCE .'&types=' . urlencode('freebase:food')
+            'text=' . urlencode($text) . '&confidence='. $confidence .'&types=' . urlencode('freebase:food')
         );
 
         $apiResultsJSON = json_decode($apiResults);
@@ -41,21 +42,22 @@ class TextAnnotation
     /**
      * Analyse the collection of texts passed by parameter and annotate them.
      * @param $urlTextList Associative array :
-     * key = source url
-     * value = full text
+     *     key = source url
+     *     value = full text
+     * @param $confidence The level of confidence (between O and 1)
      * @return Associative array :
-     *  key = inspected text,
-     *  value = associative array
-     *      key = key work spotted
-     *      value = associated dbpedia URI
+     *     key = inspected text,
+     *     value = associative array
+     *         key = key work spotted
+     *         value = associated dbpedia URI
      */
-    public static function annotateTexts(array $urlTextList)
+    public static function annotateTexts(array $urlTextList, $confidence = SPOTLIGHT_DEFAULT_CONFIDENCE)
     {
         $annotateResults = array();
 
         foreach ($urlTextList as $url => $text)
         {
-            $annotateResults[$url] = self::annotate($text);
+            $annotateResults[$url] = self::annotate($text, $confidence);
         }
         return $annotateResults;
     }
