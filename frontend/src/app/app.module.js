@@ -6,11 +6,8 @@ var gfaimApp = angular.module('gfaimApp', [
     'restangular',
     'ui.bootstrap',
     'angular-loading-bar',
-    'ngAnimate',
-    'angularFileUpload',
     'ui-notification',
-    'smart-table',
-    'gfaimApp.services'
+    'ui.bootstrap-slider'
 ])
 
     .config(['RestangularProvider', function (RestangularProvider) {

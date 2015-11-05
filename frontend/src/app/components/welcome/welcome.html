@@ -32,17 +32,22 @@
             <div class="row">
                 <div class="col-md-2">
                     <p>
-                        Seuil de similarité :
+                        Seuil de similarité : ({{sliders.sliderValue}})
                     </p>
                 </div>
                 <div class="col-md-2">
-                    <p>
-                        Seuil de similarité :
-                    </p>
+
+                        <slider ng-model="sliders.sliderValue"
+                                min="slider.min"
+                                step="slider.step"
+                                max="slider.max"
+                                value="slider.value">
+                        </slider>
                 </div>
             </div>
         </div>
     </div>
+
     <section style="text-align: center" ng-show="searchingInProcess">
         <h1 >{{loadingText}}</h1>
         <p>{{loadingSubText}}</p>

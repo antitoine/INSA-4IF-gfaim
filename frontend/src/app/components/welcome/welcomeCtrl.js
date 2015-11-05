@@ -9,6 +9,14 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
         $scope.loadingText = "Loading ...";
         $scope.loadingSubText= "This could take a while";
 
+        $scope.sliders = {
+            sliderValue : 4,
+            min : 0,
+            step :1,
+            max: 10,
+            value : 4
+        };
+
         $scope.res =
             [{
                 "graph": {
