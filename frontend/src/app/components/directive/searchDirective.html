@@ -1,17 +1,23 @@
 <div class="container searchResult well">
     <div class="row">
-        <h2 class="text-center">{{title}}</h2>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-4 well well-img">
             <div class="row">
-                <img ng-src={{img}} class="img-responsive">
-                {{caption}}
+                <h2 style="margin-bottom: 25px; margin-top: 5px;"
+                    class="text-center">{{title}}</h2>
+                <div class="box">
+                    <img id="image-1" ng-src={{img}}/>
+                    <span class="caption">
+                    <p>{{caption}}</p>
+                    </span>
+                </div>
             </div>
+            <br>
             <div class="row">
+                <p style="text-align:center">
+                    <a href="{{wiki}}" >{{wiki}}</a>
+                </p>
                 <p>
-                    {{wiki}}<br>
-                    {{mainDescription}}
+                    {{mainDescription | limitTo:200}}...
                 </p>
             </div>
         </div>

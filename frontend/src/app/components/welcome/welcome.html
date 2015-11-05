@@ -6,17 +6,19 @@
                     <h2 class="">GFAIM !</h2>
                     <hr style="visibility: hidden" class="light">
                     <p class="text-faded"></p>
+
                     <form>
                         <div class="input-group">
                             <input autofocus="autofocus" ng-model='query' placeholder="ex: Tomato Soup" type="text" id="search"
                                    class="form-control">
-                    <span class="input-group-btn">
+                            <span class="input-group-btn">
                          <button ng-click="search()" class="btn btn-default" >Search</button>
                     </span>
+
                         </div>
                     </form>
                     <p style="margin-top:15px">
-                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#optionsPanel" aria-expanded="false" aria-controls="optionsPanel">
                         Recherche avancée
                     </button>
                         <a href="#" ng-click="cancelRequest()" ng-show="isSearching" class="btn btn-primary" type="button" >
@@ -29,7 +31,7 @@
     </section>
 
 
-    <div class="collapse" id="collapseExample">
+    <div class="collapse" id="optionsPanel">
         <div class="well">
             <h3>Options</h3>
             <div class="row">
@@ -114,7 +116,7 @@
                     </div>
                     <hr>
                     <div class="row">
-                        <div ng-repeat="link in element.externLinks">
+                        <div class="container" ng-repeat="link in element.externLinks">
                             <button type="button" class="btn btn-info btn-xs btn-disabled">
                                 {{link.title}}</button>
                         </div>

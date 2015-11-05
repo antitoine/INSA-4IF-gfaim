@@ -1,4 +1,5 @@
 
+
 //IMPORT bootstrap --------------
 @import "src/assets/libs/bower_components/bootstrap/less/bootstrap.less";
 // ------------------------------
@@ -10,12 +11,57 @@
 
 @import  (inline) "src/assets/libs/bower_components/seiyria-bootstrap-slider/css/bootstrap-slider.css";
 
+
 // Theme for bootstrap ----------
 @import "variables.less";
 @import "bootswatch.less";
 
 // LESS FILES ---------
 @import "loading-bar.less";
+
+.well{
+  background-color: rgba(255, 248, 245, 0.27);
+  border-radius: 0px;
+}
+
+.well-img{
+  padding: 19px 30px;
+  background-color: rgba(255, 248, 245, 0.27);
+  -webkit-box-shadow: 1px 1px 1px 1px #ccc;
+  -moz-box-shadow: 1px 1px 1px 1px #ccc;
+  box-shadow: 1px 1px 1px 1px #ccc;
+}
+
+.box .caption {
+  width: 100%;
+  display: block;
+  line-height: 25pt;
+  text-align: center;
+  position: absolute;
+  z-index: 100;
+  -webkit-transition: all 300ms ease-out;
+  -moz-transition: all 300ms ease-out;
+  -o-transition: all 300ms ease-out;
+  -ms-transition: all 300ms ease-out;
+  transition: all 300ms ease-out;
+  left: 0;
+}
+
+.box {
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.box img {
+  width: 100%;
+  -webkit-transition: all 300ms ease-out;
+  -moz-transition: all 300ms ease-out;
+  -o-transition: all 300ms ease-out;
+  -ms-transition: all 300ms ease-out;
+  transition: all 300ms ease-out;
+  border: 1px solid darkgray;
+}
+
 
 .slider-selection{
   background-image: none;
@@ -114,3 +160,5 @@ html{
   padding: 20px;
   margin-bottom: 10px;
 }
+
+
