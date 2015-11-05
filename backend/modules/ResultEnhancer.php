@@ -65,6 +65,10 @@ class ResultEnhancer {
         return "SELECT ?s ?p ?o WHERE { ?s ?p ?o. FILTER(?s in (<$uri>) && (LANG(?o)='en' || LANG(?o)='' )) } ";
     }
     
+    private static function requestAllTriplesNoFilter($uri) {
+        return "SELECT ?s ?p ?o WHERE { ?s ?p ?o. FILTER(?s in (<$uri>)) } ";
+    }
+    
     private static function formatTripleFromPredicate($triple, $p) {
         return "&lt;" . $triple->s->value . "&gt; &lt" . $p . "&gt; &lt;" . $triple->o->value . "&gt; <br/>";
     }
@@ -74,12 +78,13 @@ class ResultEnhancer {
     }
     
     public static function getGeneralInfos($uri) {
-        $predicates = array("http://www.w3.org/2000/01/rdf-schema#label",
+        $predicatesEnglish = array("http://www.w3.org/2000/01/rdf-schema#label",
                             "http://www.w3.org/2000/01/rdf-schema#comment",
                             "http://xmlns.com/foaf/0.1/isPrimaryTopicOf",
-                            "http://dbpedia.org/ontology/thumbnail",
                             "http://dbpedia.org/property/imageCaption");
-        return getAllTriples($uri, $predicates);
+        $predicates = array("http://dbpedia.org/ontology/thumbnail");
+        return array_merge(self::getAllTriples($uri, $predicatesEnglish),
+                            self::getAllTriplesNoFilter($uri, $predicates));
     }
     
     // Do not use it separately - used in getTriplesFromPredicate
@@ -114,16 +119,18 @@ class ResultEnhancer {
     private static function constructAllTriples($response, $predicates) {
         // convert json response to php object
         $spo_triples = json_decode($response);
-        $triples = (array)$spo_triples->results->bindings;
-        
+        $triples = array();
+        $triples = $spo_triples->{'results'}->{'bindings'};
+        //echo '<pre>'; var_dump($triples); echo '</pre>';
+        //die();
         // format triples to a clean array
         $formattedTriples = array();
-        foreach($triples as $triple) {
+        foreach ($triples as $triple) {
            
-            if( in_array($triple->p->value, $predicates) ) {
+            if( in_array($triple->{'p'}->{'value'}, $predicates) ) {
                 $formattedTriples = array_merge(
                     $formattedTriples,
-                    array( array($triple->s->value, $triple->p->value, $triple->o->value) )
+                    array( array($triple->{'s'}->{'value'}, $triple->{'p'}->{'value'}, $triple->{'o'}->{'value'}) )
                 );   
             }
         }
@@ -134,6 +141,16 @@ class ResultEnhancer {
     private static function getAllTriples($uri, $predicates) {
         $query = self::buildHTTPRequest(self::requestAllTriples($uri));
         $response = file_get_contents($query);
+        $triples = self::constructAllTriples($response, $predicates);
+        return $triples;
+    }
+    
+    // Returns an array of all triples found for a predicate on a uri without language filters
+    private static function getAllTriplesNoFilter($uri, $predicates) {
+        /* Deprecated
+        $query = self::buildHTTPRequest(self::requestAllTriples($uri));
+        $response = file_get_contents($query); */
+        $response = self::execSPARQLQuery(self::requestAllTriplesNoFilter($uri));
         $triples = self::constructAllTriples($response, $predicates);
         return $triples;
     }

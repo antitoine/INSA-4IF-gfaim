@@ -18,6 +18,7 @@ class Cache
     private function __construct()
     {
         $this->db = new SQLite3(DATABASE_ROOT);
+        $this->db->close();
     }
 
     /**
@@ -39,10 +40,10 @@ class Cache
         return $this->db->exec(
             'CREATE TABLE IF NOT EXISTS ModuleOne (
                 query TEXT NOT NULL, 
-                result TEXT NOT NULL,
+                url TEXT NOT NULL,
                 title TEXT NOT NULL,
                 description TEXT NOT NULL,
-                PRIMARY KEY (query, result)
+                PRIMARY KEY (query, url)
             );');
     }
 
@@ -56,23 +57,28 @@ class Cache
         if (!CACHE_ENABLED) {
             return null;
         }
-        
+
+        $this->db->open(DATABASE_ROOT);
+
         $queryResult = array();
         $ret = $this->createIfNotExistsModuleOneTable();
         if (!$ret) {
             echo $this->db->lastErrorMsg();
         } else {
-            $statement = $this->db->prepare('SELECT result FROM ModuleOne WHERE query = :query;');
+            $statement = $this->db->prepare('SELECT url, title, description FROM ModuleOne WHERE query = :query;');
             $statement->bindValue(':query', $query);
             $queryResultsSet = $statement->execute();
             
             while ($result = $queryResultsSet->fetchArray()) {
-                $queryResult[$result['result']] = array(
+                $queryResult[$result['url']] = array(
                     'title' => $result['title'],
                     'description' => $result['description']
                     );
             }
         }
+
+        $this->db->close();
+
         return $queryResult;
     }
 
@@ -89,7 +95,9 @@ class Cache
         if (!CACHE_ENABLED) {
             return false;
         }
-        
+
+        $this->db->open(DATABASE_ROOT);
+
         $textResult = null;
         $ret = $this->createIfNotExistsModuleOneTable();
 
@@ -99,12 +107,14 @@ class Cache
         }
         else
         {
-            $insertStatement = $this->db->prepare("INSERT OR IGNORE INTO ModuleOne ('query', 'result') VALUES (:query, :result)");
+            $insertStatement = $this->db->prepare("INSERT OR IGNORE INTO ModuleOne ('query', 'url', 'title', 'description') VALUES (:query, :url, :title, :description)");
             $insertStatement->bindParam(':query', $query);
             
-            foreach ($results as $result)
+            foreach ($results as $url => $value)
             {
-                $insertStatement->bindValue(':result', $result);
+                $insertStatement->bindValue(':url', $url);
+                $insertStatement->bindValue(':title', $value['title']);
+                $insertStatement->bindValue(':description', $value['description']);
                 
                 $ret = $insertStatement->execute();
                 
@@ -115,7 +125,9 @@ class Cache
             }
 
         }
-        
+
+        $this->db->close();
+
         return $ret;
     }
 
@@ -141,7 +153,9 @@ class Cache
         if (!CACHE_ENABLED) {
             return null;
         }
-        
+
+        $this->db->open(DATABASE_ROOT);
+
         $textResult = null;
         
         
@@ -164,6 +178,9 @@ class Cache
                 break;
             }
         }
+
+        $this->db->close();
+
         return $textResult;
     }
 
@@ -178,7 +195,9 @@ class Cache
         if (!CACHE_ENABLED) {
             return false;
         }
-        
+
+        $this->db->open(DATABASE_ROOT);
+
         $ret = $this->createIfNotExistsModuleTwoTable();
 
         if (!$ret)
@@ -198,6 +217,8 @@ class Cache
                 echo $this->db->lastErrorMsg();
             }
         }
+
+        $this->db->close();
 
         return $ret;
     }

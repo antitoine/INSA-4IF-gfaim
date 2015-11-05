@@ -31,6 +31,8 @@ class SearchEngineExtraction
             'safe' => 'high',
             'lr' => 'lang_en'
         )); 
+        
+        
 
         $googleResultsJSON = json_decode($googleResults);
 
@@ -45,12 +47,12 @@ class SearchEngineExtraction
                 return $links;   
             }
         }
-
+        
         foreach ($googleResultsJSON->{'items'} as $item)
         {
             $links[$item->{'link'}] = array(
                 'title' => $item->{'title'},
-                'description' => $item->{'title'}
+                'description' => $item->{'snippet'}
             ); 
         }
 
