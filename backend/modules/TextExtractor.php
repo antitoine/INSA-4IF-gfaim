@@ -35,20 +35,22 @@ class TextExtractor
             {
 
                 $url_headers = @get_headers($clearUrl);
-                $code_header = explode(' ', $url_headers[0])[1];
-    
-                if(in_array($code_header, self::$include_header_code) && !isset($urlTextList[$clearUrl]))
+                if (isset($url_headers[0]))
                 {
-                    $html = self::getHtmlOfURL($clearUrl);
-
-                    if($html != null)
+                    $header_array = explode(' ', $url_headers[0]);
+                    
+                    if(isset($header_array[1]) && in_array($header_array[1], self::$include_header_code) && !isset($urlTextList[$clearUrl]))
                     {
-                        $urlTextList[$clearUrl] = self::getTextFromHtml($html);
-                        
-                        $cache->setSingleResultInModuleTwo($clearUrl, $urlTextList[$clearUrl]);
+                        $html = self::getHtmlOfURL($clearUrl);
+    
+                        if($html != null)
+                        {
+                            $urlTextList[$clearUrl] = self::getTextFromHtml($html);
+                            
+                            $cache->setSingleResultInModuleTwo($clearUrl, $urlTextList[$clearUrl]);
+                        }
                     }
                 }
-
             }
         }
         return $urlTextList;

@@ -27,12 +27,13 @@ const SEARCH_ENGINE_KEYS_FOOD = array(
 
 const NUMBER_OF_SEARCH_ENGINE_KEYS = 3;
 
+// Request with this default number of pages while be cached
 const DEFAULT_NUMBER_OF_PAGES = 20;
 
 /**
  * TextExtractor Configuration
  */
-const TIMEOUT_EXTRACTION = 2;
+const TIMEOUT_EXTRACTION = 3;
 
 /**
  * TextAnnotation Configuration
