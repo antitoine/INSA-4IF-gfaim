@@ -28,7 +28,7 @@ const NUMBER_OF_SEARCH_ENGINE_KEYS = 7;
 /**
  * TextAnnotation Configuration
  */
-//define('SPOTLIGHT_URL',         'http://spotlight.dbpedia.org/rest/annotate');
+//const SPOTLIGHT_URL = 'http://spotlight.dbpedia.org/rest/annotate';
 const SPOTLIGHT_URL = 'http://spotlight.gfaim.antoine-chabert.fr/rest/annotate';
 const SPOTLIGHT_CONFIDENCE = 2;
 

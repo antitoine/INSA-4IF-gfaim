@@ -45,6 +45,10 @@ Flight::route('/enhance/test', function () {
     Flight::json(ResultEnhancer::ProcessTest());
 });
 
+Flight::route('/enhance/dataConcept/test', function () {
+    Flight::json(ResultEnhancer::ProcessTestDataConcept());
+});
+
 Flight::route('/similarity/test', function () {
     echo '<pre>';
     var_dump(GraphSimilarity::getConnectedComponentsJSONTest());
@@ -53,4 +57,16 @@ Flight::route('/similarity/test', function () {
 
 Flight::route('/gfaim/test', function () {
     Flight::json(GFaimSearchEngine::search(Flight::request()->query['q']));
+});
+
+Flight::route('/search/and/extract/test', function () {
+    Flight::json(
+        TextExtractor::getAllText(
+            array_keys(
+                SearchEngineExtraction::getResultLinksOfQuery(
+                    Flight::request()->query['q']
+                )
+            )
+        )
+    );
 });
