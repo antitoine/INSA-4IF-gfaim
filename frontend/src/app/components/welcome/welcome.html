@@ -8,7 +8,7 @@
                     <p class="text-faded"></p>
                     <form>
                         <div class="input-group">
-                            <input ng-model='query' placeholder="ex: Tomato Soup" type="text" id="search"
+                            <input autofocus="autofocus" ng-model='query' placeholder="ex: Tomato Soup" type="text" id="search"
                                    class="form-control">
                     <span class="input-group-btn">
                          <button ng-click="search()" class="btn btn-default" >Search</button>
@@ -20,7 +20,7 @@
                         Recherche avancée
                     </button>
                         <a href="#" ng-click="cancelRequest()" ng-show="isSearching" class="btn btn-primary" type="button" >
-                            Cancel Request
+                            Cancel Search
                         </a>
                     </p>
                 </div>
@@ -35,16 +35,31 @@
             <div class="row">
                 <div class="col-md-2">
                     <p>
-                        Seuil de similarité : ({{sliders.sliderValue}})
+                        Similarity Threshold : ({{sliders.similarity.sliderValue}})
                     </p>
                 </div>
                 <div class="col-md-2">
-                        <slider ng-model="sliders.sliderValue"
-                                min="slider.min"
-                                step="slider.step"
-                                max="slider.max"
-                                value="slider.value">
+                        <slider ng-model="sliders.similarity.sliderValue"
+                                min="sliders.similarity.min"
+                                step="sliders.similarity.step"
+                                max="sliders.similarity.max"
+                                value="sliders.similarity.value">
                         </slider>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <p>
+                        Confidence Value : ({{sliders.confidence.sliderValue}})
+                    </p>
+                </div>
+                <div class="col-md-2">
+                    <slider ng-model="sliders.confidence.sliderValue"
+                            min="sliders.confidence.min"
+                            step="sliders.confidence.step"
+                            max="sliders.confidence.max"
+                            value="sliders.confidence.value">
+                    </slider>
                 </div>
             </div>
         </div>
@@ -96,6 +111,13 @@
                     <div ng-repeat="link in element.externLinks">
                         <h4><a target="_blank" href={{link.url}}>{{link.title}}</a></h4>
                         <p>{{link.description}}</p>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div ng-repeat="link in element.externLinks">
+                            <button type="button" class="btn btn-info btn-xs btn-disabled">
+                                {{link.title}}</button>
+                        </div>
                     </div>
                 </search-result>
             </div>

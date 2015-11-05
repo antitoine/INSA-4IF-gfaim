@@ -1,5 +1,5 @@
-gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state', '$timeout',
-    function ($scope, searchService, $log, $state, $timeout) {
+gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state', '$timeout', '$q',
+    function ($scope, searchService, $log, $state, $timeout, $q) {
 
         $scope.isSearching = false;
         $scope.searchingInProcess = false;
@@ -10,11 +10,20 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
         $scope.loadingSubText= "This could take a while";
 
         $scope.sliders = {
-            sliderValue : 4,
-            min : 0,
-            step :1,
-            max: 10,
-            value : 4
+            similarity : {
+                sliderValue : 3,
+                min : 0,
+                step :1,
+                max: 10,
+                value : 3
+            },
+            confidence : {
+                sliderValue : 1,
+                min : 0,
+                step :0.2,
+                max: 2,
+                value : 1
+            }
         };
 
         $scope.results =
@@ -241,7 +250,10 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
             $scope.nodes.add([
                 {id: 0, label: $scope.query, group: 0}
             ]);
-            searchService.search($scope.query)
+            $scope.canceler = $q.defer();
+
+            searchService.search($scope.query, $scope.sliders.confidence.sliderValue,
+                $scope.sliders.similarity.sliderValue, $scope.canceler)
                 .then(function (result) {
                     $scope.searchingInProcess = false;
                     $scope.searchingDone = true;
@@ -254,10 +266,8 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
         };
 
         $scope.cancelRequest = function(){
-            //var canceler = $q.defer();
-            //$http.get('/someUrl', {timeout: canceler.promise}).success(successCallback);
-            //canceler.resolve();  // Aborts the $http request if it isn't finished.
-        }
+            $scope.canceler.resolve();
+        };
 
         function createGraph(){
             var nodes = [];

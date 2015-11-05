@@ -32,7 +32,9 @@ function start(Restangular, $http, $state, Notification, $rootScope, $log, $time
     Restangular.setErrorInterceptor(
         function (response) {
             // https://fr.wikipedia.org/wiki/Liste_des_codes_HTTP
-            Notification.error("Erreur HTTP : " + response.status);
+            if(response.status !== -1){
+                Notification.error("Erreur HTTP : " + response.status);
+            }
             return true;
         }
     );
