@@ -55,23 +55,9 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
         $scope.nodes = new vis.DataSet();
         $scope.edges = new vis.DataSet();
 
-        var index = 5;
+  //      var index = 5;
 
         var isConceptsShowing = false;
-
-        var conceptsInfos = {
-            1: {isShowing: false},
-            2: {isShowing: false},
-            3: {isShowing: false},
-            4: {isShowing: false}
-        };
-
-        $scope.concepts = [
-            {id: 1, title: "chocolat", group: 2},
-            {id: 2, title: "fraise", group: 2},
-            {id: 3, title: "carotte", group: 2},
-            {id: 4, title: "recette", group: 2}
-        ];
 
         $scope.network_data = {
             nodes: $scope.nodes,
@@ -82,22 +68,12 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
         $scope.network = new vis.Network(container, $scope.network_data, $scope.network_options || {});
 
         $scope.network_options = {
-            "interaction": {
-                "hover": true
-            },
             "edges": {
-                "smooth": {
-                    "forceDirection": "none"
-                }
+                "smooth": false
             },
             "physics": {
-                "forceAtlas2Based": {
-                    "gravitationalConstant": -47,
-                    "springLength": 220,
-                    "avoidOverlap": 1
-                },
-                "minVelocity": 0.75,
-                "solver": "forceAtlas2Based"
+                "enabled": false,
+                "minVelocity": 0.75
             }
         };
 
@@ -106,12 +82,12 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
             $scope.nodes.clear();
             $scope.edges.clear();
             isConceptsShowing = false;
-            for (var index in conceptsInfos) {
-                conceptsInfos[index].isShowing = false;
-            }
+            //for (var index in conceptsInfos) {
+            //    //conceptsInfos[index].isShowing = false;
+            //}
         };
 
-        $scope.onNodeSelect = function (params) {
+/*        $scope.onNodeSelect = function (params) {
 
             if (params.nodes[0]) {
                 var selected = params.nodes[0];
@@ -137,25 +113,25 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
                 }
             }
             $scope.redraw(2000);
-        };
+        };*/
 
-        var clickConcept = function (groupid) {
+/*        var clickConcept = function (groupid) {
             for (var i = 0; i < 5; i++) {
                 $scope.nodes.add({id: index, group: groupid});
                 $scope.edges.add({from: index, to: groupid});
                 index++;
             }
             conceptsInfos[groupid].isShowing = true;
-        };
+        };*/
 
-        $scope.addConcepts = function () {
+/*        $scope.addConcepts = function () {
             $scope.nodes.add($scope.concepts);
             for (var i = 0; i < $scope.concepts.length; i++) {
                 $scope.edges.add(
                     {from: 0, to: $scope.concepts[i].id}
                 );
             }
-        };
+        };*/
 
 
         $scope.search = function () {
@@ -163,6 +139,7 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
                 return;
             }
             iterateSearch(3);
+
             $scope.loadingText = "Loading ...";
             $scope.loadingSubText= "This could take a while";
             $scope.searchingDone = false;
@@ -170,11 +147,7 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
             $scope.searchingInProcess = true;
             $scope.searchFailed = false;
             $scope.resetGraph();
-            createGraph();
 
-            $scope.nodes.add([
-                {id: 0, label: $scope.query, group: 0}
-            ]);
             $scope.canceler = $q.defer();
 
             searchService.search($scope.query, $scope.sliders.confidence.sliderValue,
@@ -184,6 +157,8 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
                     $scope.searchingDone = true;
                     $scope.results.length = 0;
                     $scope.results = result;
+                    createGraph();
+
                 }, function () {
                     $scope.searchFailed = true;
                     $scope.searchingInProcess = false;
@@ -195,20 +170,30 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
         };
 
         function createGraph(){
+            var index = 1000;
+            $scope.nodes.add([
+                {id: 0, label: $scope.query, group: 0, value : 10}
+            ]);
             var nodes = [];
             var edges = [];
-            var incr = 0;
             for(var i = 0; i < $scope.results.length; i ++){
+                index++;
+                if($scope.results[i].mainConcept === undefined){
+                    $scope.nodes.add({label : 'no main concept', id : index, group : index});
+                }else {
+                    $scope.nodes.add({label: $scope.results[i].mainConcept.name || '', id : index, title:$scope.results[i].mainConcept.uri,
+                        group : index});
+                }
+                $scope.edges.add({from: 0, to : index});
+
                 for(var j = 0; j < $scope.results[i].graph.nodes.length; j++){
-                    $scope.results[i].graph.nodes[j].id += incr;
+                    $scope.results[i].graph.nodes[j].group = index;
                     nodes.push($scope.results[i].graph.nodes[j]);
+                    $scope.edges.add({from: $scope.results[i].graph.nodes[j].id, to : index});
                 }
                 for(var j = 0; j < $scope.results[i].graph.edges.length; j++){
-                    $scope.results[i].graph.edges[j].from += incr;
-                    $scope.results[i].graph.edges[j].to += incr;
                     edges.push($scope.results[i].graph.edges[j]);
                 }
-                incr = incr + $scope.results[i].graph.nodes.length;
             }
             console.log(nodes);
             console.log(edges);
