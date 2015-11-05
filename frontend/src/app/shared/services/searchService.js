@@ -7,7 +7,7 @@ function search(Restangular, $log, $q) {
             Restangular.one('/search?q='+query)
                 .get()
                 .then(function (data) {
-                    if(data.plain()){
+                    if(data.plain){
                         resolve(data.plain());
                     } else {
                         reject('Erreur de connexion !');

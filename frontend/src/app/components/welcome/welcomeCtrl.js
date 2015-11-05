@@ -253,6 +253,12 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
                 })
         };
 
+        $scope.cancelRequest = function(){
+            //var canceler = $q.defer();
+            //$http.get('/someUrl', {timeout: canceler.promise}).success(successCallback);
+            //canceler.resolve();  // Aborts the $http request if it isn't finished.
+        }
+
         function createGraph(){
             var nodes = [];
             var edges = [];
