@@ -13,17 +13,19 @@ const VAR_DIR = '/var/www/gfaim/backend/var';
 const SEARCH_ENGINE_URL = 'https://www.googleapis.com/customsearch/v1';
 const GOOGLE_SEARCH_CX  = '014001075900266475386:idgzvgxto1s';
 
-const SEARCH_ENGINE_KEYS = array(
-    0 => 'AIzaSyASK1nR0p8Mjx4Fw9XHvMI-m20xSbtAwnc',
-    1 => 'AIzaSyCPZQ6hboLZx-6rx9sRTh1e7mzzfXwK-fg',
-    2 => 'AIzaSyBuS4S5W8vAkRajhQuy_Hv2CM6JPvfLbPo',
-    3 => 'AIzaSyAiLHN42sSVAg418iQ5S81SLqkaFgPY8rk',
-    4 => 'AIzaSyCSPh3AAxZuKLvM5XNc5rS09yWKxXVKa9A',
-    5 => 'AIzaSyCRrQOOrNMJLZt-Lhcuvgqm0x-rDXeqkyw',
-    6 => 'AIzaSyCzKQkRUD47ZZN9fy4Mhoo5oSWVxRdrccg'
+const SEARCH_ENGINE_KEYS_RECIPES = array(
+    0 => 'AIzaSyDq3GT6ywCVX2u1c2jJnGNh5y2pqxEJ8CQ',
+    1 => 'AIzaSyBWJjMi9ThbZmFRF3HBr-bVlAWoZK5EDTE',
+    2 => 'AIzaSyBvQwhdSuMCSWsQd4EX-c3o0kep3e-Ldmk'
 );
 
-const NUMBER_OF_SEARCH_ENGINE_KEYS = 7;
+const SEARCH_ENGINE_KEYS_FOOD = array(
+    0 => 'AIzaSyAdQ7sbLYwqbuliGCWCKdU9nEJxIy4_8m8',
+    1 => 'AIzaSyAbF4v2-eaUhOehrWYQ1xosEXnisJYJYAs',
+    2 => 'AIzaSyBGzkRAaD4Sqmfud_QShUGbcm0P3DZALLk'
+);
+
+const NUMBER_OF_SEARCH_ENGINE_KEYS = 3;
 
 /**
  * TextExtractor Configuration

@@ -17,26 +17,34 @@ class SearchEngineExtraction
         $cache = Cache::getInstance();
         $resultOfQueryCached = $cache->getResultListOfModuleOneByQuery($query);
         
-        if (!empty($resultOfQueryCached))
+        if ($resultOfQueryCached != null && !empty($resultOfQueryCached))
         {
             return $resultOfQueryCached;
         }
 
         $links = array();
 
-        $googleResults = Utils::CallAPI('GET', SEARCH_ENGINE_URL, array(
-            'key' => SEARCH_ENGINE_KEYS[$APIKeyNumber],
+        $googleResultsRecipes = Utils::CallAPI('GET', SEARCH_ENGINE_URL, array(
+            'key' => SEARCH_ENGINE_KEYS_RECIPES[$APIKeyNumber],
             'cx' => GOOGLE_SEARCH_CX,
-            'q' => $query,
+            'q' => 'recipes '.$query,
             'safe' => 'high',
             'lr' => 'lang_en'
-        )); 
-        
-        
+        ));
 
-        $googleResultsJSON = json_decode($googleResults);
+        $googleResultsJSONRecipes = json_decode($googleResultsRecipes, true);
 
-        if (!isset($googleResultsJSON->{'items'}))
+        $googleResultsFood = Utils::CallAPI('GET', SEARCH_ENGINE_URL, array(
+            'key' => SEARCH_ENGINE_KEYS_FOOD[$APIKeyNumber],
+            'cx' => GOOGLE_SEARCH_CX,
+            'q' => 'food '.$query,
+            'safe' => 'high',
+            'lr' => 'lang_en'
+        ));
+
+        $googleResultsJSONFood = json_decode($googleResultsFood, true);
+        
+        if (!isset($googleResultsJSONRecipes['items']))
         {
             if ($APIKeyNumber < NUMBER_OF_SEARCH_ENGINE_KEYS)
             {
@@ -47,12 +55,20 @@ class SearchEngineExtraction
                 return $links;   
             }
         }
-        
-        foreach ($googleResultsJSON->{'items'} as $item)
+
+        foreach ($googleResultsJSONRecipes['items'] as $item)
         {
-            $links[$item->{'link'}] = array(
-                'title' => $item->{'title'},
-                'description' => $item->{'snippet'}
+            $links[$item['link']] = array(
+                'title' => $item['title'],
+                'description' => $item['snippet']
+            ); 
+        }
+        
+        foreach ($googleResultsJSONFood['items'] as $item)
+        {
+            $links[$item['link']] = array(
+                'title' => $item['title'],
+                'description' => $item['snippet']
             ); 
         }
 

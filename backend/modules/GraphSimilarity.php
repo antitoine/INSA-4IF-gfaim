@@ -227,6 +227,13 @@ class GraphSimilarity
                 array('http://dbpedia.org/resource/Pea', 'dbp:kj', '1425')
             ),
             
+            'url 8' => array(
+                array('http://dbpedia.org/resource/Pea', 'dbp:fat', '1.0'),
+                array('http://dbpedia.org/resource/Pea', 'dbp:fat', '0.4'),
+                array('http://dbpedia.org/resource/Pea', 'dbp:kj', '10'),
+                array('http://dbpedia.org/resource/Pea', 'dbp:kj', '1425')
+            ),
+            
             'url 3' => array(
                 array('http://dbpedia.org/resource/Pea', 'dif', '1.0'),
                 array('http://dbpedia.org/resource/Pea', 'dif', '0.4'),

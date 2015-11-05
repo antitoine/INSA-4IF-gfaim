@@ -55,6 +55,7 @@ class Cache
     public function getResultListOfModuleOneByQuery($query)
     {
         if (!CACHE_ENABLED) {
+            
             return null;
         }
 
