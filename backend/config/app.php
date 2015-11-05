@@ -30,10 +30,27 @@ const NUMBER_OF_SEARCH_ENGINE_KEYS = 7;
  */
 //const SPOTLIGHT_URL = 'http://spotlight.dbpedia.org/rest/annotate';
 const SPOTLIGHT_URL = 'http://spotlight.gfaim.antoine-chabert.fr/rest/annotate';
-const SPOTLIGHT_CONFIDENCE = 2;
+const SPOTLIGHT_DEFAULT_CONFIDENCE = 1;
 
 /**
  * Cache DataBase
  */
 const CACHE_ENABLED = true;
 const DATABASE_ROOT = VAR_DIR . '/cache.sqlite3';
+
+
+/**
+ * SPARQL
+ */
+const GENERAL_INFO_LABEL = 'http://www.w3.org/2000/01/rdf-schema#label';
+const GENERAL_INFO_COMMENT = 'http://www.w3.org/2000/01/rdf-schema#comment';
+const GENERAL_INFO_IMAGECAPTION = 'http://dbpedia.org/property/imageCaption';
+    
+const GENERAL_INFO_THUMBNAIL = 'http://dbpedia.org/ontology/thumbnail';
+const GENERAL_INFO_PRIMARYTOPIC = 'http://xmlns.com/foaf/0.1/isPrimaryTopicOf';
+
+
+/**
+ * Graph
+ */
+const GRAPH_DEFAULT_SIMILARITY = 1;
