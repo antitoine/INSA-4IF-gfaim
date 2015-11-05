@@ -2,10 +2,7 @@
     <section class="bg-primary welcome" id="about" ng-class="{'ontop': isSearching}">
         <div class="container">
             <div class="row">
-                <div class="col-md-1" style="margin-top: 77px">
-                   <h3 ng-show="isSearching"><a style="color: white" href="#" ng-click="goHome()" >Gfaim</h3>
-                </div>
-                <div class="col-md-6 col-md-offset-2 text-center">
+                <div class="col-md-6 col-md-offset-3 text-center">
                     <h2 class="">GFAIM !</h2>
                     <hr style="visibility: hidden" class="light">
                     <p class="text-faded"></p>
@@ -22,6 +19,9 @@
                         <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                         Recherche avancée
                     </button>
+                        <a href="#" ng-click="cancelRequest()" ng-show="isSearching" class="btn btn-primary" type="button" >
+                            Cancel Request
+                        </a>
                     </p>
                 </div>
             </div>
