@@ -125,6 +125,22 @@
                         </form>
                     </div>
                 </div>
+                <div class="module module-1-2-3-4 col-sm-12">
+                    <div class="well">
+                        <h3>Module 1, 2, 3 and 4 : Triples found with a query</h3>
+                        <form action="/search/extract/annotate/enhance/test">
+                            <div class="form-group">
+                                <label for="queryModule1And2And3And4">Query to search</label>
+                                <input id="queryModule1And2And3And4" type="text" name="q"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="confidenceModule1And2And3And4">Confidence</label>
+                                <input id="confidenceModule1And2And3And4" type="number" name="confidence" value="1"/>
+                            </div>
+                            <button class="btn btn-default" type="submit">Submit</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </body>

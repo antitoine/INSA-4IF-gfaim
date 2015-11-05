@@ -251,12 +251,7 @@ class Graph
 		foreach ($allGraphNodes as $currentNode)
 		{
 			// Get the node short name
-			$shortName = $currentNode;
-			if (preg_match("/\/([^\/]+)$/", $currentNode, $matches))
-			{
-  				$shortName = $matches[1];
-  				$shortName = str_replace('_', ' ', $shortName);
-			}
+			$shortName = Utils::getShortNameURL($currentNode);
 			
 			$nodes[] = array(
 				'id' => $this->nodesId[$currentNode],
@@ -273,21 +268,17 @@ class Graph
 		
 		foreach ($this->adj_mat as $startNode => $destNodes)
 		{
-			$idNodeFrom = array_search($startNode, $allGraphNodes);
-			
 			foreach ($destNodes as $destNode => $weight) 
 			{
-				$idNodeTo = array_search($destNode, $allGraphNodes);
-				
-				if (!in_array($idNodeTo . '-' . $idNodeFrom, $edgesAdded))
+				if (!in_array($this->nodesId[$destNode] . '-' . $this->nodesId[$startNode], $edgesAdded))
 				{
 					$edges[] = array(
-						'from' => $idNodeFrom,
-						'to' => array_search($destNode, $allGraphNodes),
+						'from' => $this->nodesId[$startNode],
+						'to' => $this->nodesId[$destNode],
 						'title' => $weight
 					);
 					
-					$edgesAdded[] = $idNodeFrom . '-' . $idNodeTo;
+					$edgesAdded[] = $this->nodesId[$startNode] . '-' . $this->nodesId[$destNode];
 				}
 			}
 		}

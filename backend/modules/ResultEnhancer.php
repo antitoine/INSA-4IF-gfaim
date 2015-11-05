@@ -199,23 +199,6 @@ class ResultEnhancer {
         $response = file_get_contents($query);
         return self::constructAllTriples($response);
     }
-    /*
-    // Returns an array of all triples found for a predicate on a uri
-    private static function getAllTriples($uri, $englishPredicates, $predicatesNoLang) {
-        //SPARQL request choice
-        $remote = true;
-        if($remote) {
-            // Remote version - fast
-            $query = self::buildHTTPRequest(self::requestAllTriples($uri, $englishPredicates, $predicatesNoLang));
-            $response = file_get_contents($query);
-        } else {
-            // Local SPARQL version - slow
-            $response = self::execSPARQLQuery(self::requestAllTriples($uri, $englishPredicates, $predicatesNoLang));
-        }
-        
-        $triples = self::constructAllTriples($response);
-        return $triples;
-    }*/
     
     private static function getAllTriplesGenus($uriGenus) {
         //SPARQL request choice
