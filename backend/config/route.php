@@ -47,6 +47,7 @@ Flight::route('/search/test', function(){
         $query = Flight::request()->query['q'];
         $result = SearchEngineExtraction::getResultLinksOfQuery($query);
     }
+    
     Flight::json($result);
 });
 
@@ -117,6 +118,29 @@ Flight::route('/search/extract/annotate/test', function () {
         $allUrl = array_keys($resultOfModule1);
         $resultOfModule2 = TextExtractor::getAllText($allUrl);
         $result = TextAnnotation::annotateTexts($resultOfModule2, $confidence);
+    }
+    Flight::json($result);
+});
+
+/**
+ * Route to test the module 1, 2, 3 and 4
+ */
+Flight::route('/search/extract/annotate/enhance/test', function () {
+    $result = array();
+    
+    if (isset(Flight::request()->query['q']))
+    {
+        $query = Flight::request()->query['q'];
+        $confidence = 1;
+        if (isset(Flight::request()->query['confidence']))
+        {
+            $confidence = Flight::request()->query['confidence'];
+        }
+        $resultOfModule1 = SearchEngineExtraction::getResultLinksOfQuery($query);
+        $allUrl = array_keys($resultOfModule1);
+        $resultOfModule2 = TextExtractor::getAllText($allUrl);
+        $annotatedUrls = TextAnnotation::annotateTexts($resultOfModule2, $confidence);
+        $result = ResultEnhancer::Process($annotatedUrls);
     }
     Flight::json($result);
 });

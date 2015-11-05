@@ -45,6 +45,16 @@ class Utils
 
         return $result;
     }
+    
+    public static function getShortNameURL($url) {
+        $shortName = $url;
+        if (preg_match("/\/([^\/]+)$/", $url, $matches))
+		{
+  		    $shortName = $matches[1];
+  			$shortName = str_replace('_', ' ', $shortName);
+		}
+		return $shortName;
+    }
 
 
 

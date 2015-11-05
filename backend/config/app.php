@@ -26,6 +26,11 @@ const SEARCH_ENGINE_KEYS = array(
 const NUMBER_OF_SEARCH_ENGINE_KEYS = 7;
 
 /**
+ * TextExtractor Configuration
+ */
+const TIMEOUT_EXTRACTION = 2;
+
+/**
  * TextAnnotation Configuration
  */
 //const SPOTLIGHT_URL = 'http://spotlight.dbpedia.org/rest/annotate';
@@ -38,7 +43,6 @@ const SPOTLIGHT_DEFAULT_CONFIDENCE = 1;
 const CACHE_ENABLED = true;
 const DATABASE_ROOT = VAR_DIR . '/cache.sqlite3';
 
-
 /**
  * SPARQL
  */
@@ -50,8 +54,15 @@ const GENERAL_INFO_THUMBNAIL = 'http://dbpedia.org/ontology/thumbnail';
 const GENERAL_INFO_PRIMARYTOPIC = 'http://xmlns.com/foaf/0.1/isPrimaryTopicOf';
 
 const PROPERTY_GENUS = 'http://dbpedia.org/ontology/genus';
+const PROPERTY_MAININGREDIENTOF = 'http://dbpedia.org/property/mainIngredient';
+const PROPERTY_RECIPIE_IMAGE = 'http://xmlns.com/foaf/0.1/depiction';
 
 /**
  * Graph
  */
 const GRAPH_DEFAULT_SIMILARITY = 1.5;
+
+/**
+ * GFaim Results
+ */
+const NB_MAX_RECIPIES = 12;

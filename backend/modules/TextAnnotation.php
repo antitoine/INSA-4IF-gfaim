@@ -6,7 +6,6 @@
  */
 class TextAnnotation
 {
-
     /**
      * Analyse the text passed by parameter and annotate it by calling dbpedia spotlight.
      * @param $text The text to inspect
@@ -77,5 +76,4 @@ class TextAnnotation
               'http://www.healthline.com/health/food-nutrition/pineapple-juice-benefits' => 'Chicken, pineapple, avocado, and black beans bring all of the flavors of Cuba to romaine lettuce!  I came up with this recipe to use leftover chicken in a way that combines all of the delicious Cuban flavors I grew up with.'
             ));
     }
-
 }

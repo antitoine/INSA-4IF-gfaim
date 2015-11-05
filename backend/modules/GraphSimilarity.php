@@ -26,6 +26,7 @@ class GraphSimilarity
         // Sum the concepts occurences
         $conceptsOccurs = array();
         
+        // Count the occurs of each concept
         foreach ($urls as $url) {
             if (isset($this->graphConcepts[$url])) {
                 foreach ($this->graphConcepts[$url] as $concept => $occurs) {
@@ -42,15 +43,20 @@ class GraphSimilarity
             return '';
         }
         
-        // Get the max value of concept counter
-        $maxCounter = max(array_values($conceptsOccurs));
+        arsort($conceptsOccurs);
         
-        // Get the matching concepts
-        $mainConcept = array_search($maxCounter, $conceptsOccurs);
+        $conceptsOccursKeys = array_keys($conceptsOccurs);
         
-        $this->removeConcept($mainConcept);
+        $dataConcepts = array();
         
-        return $mainConcept;
+        // Set the first 10 concepts (the first is the main concept)
+        for ($i = 0, $maxConcepts = count($conceptsOccursKeys); $i < 10 && $i < $maxConcepts; $i++) {
+            $dataConcepts[] = $conceptsOccursKeys[$i];
+        }
+        
+        $this->removeConcept($dataConcepts[0]);
+        
+        return $dataConcepts;
     }
     
     private function removeConcept($concept) {
@@ -152,6 +158,7 @@ class GraphSimilarity
         return $connectedComponent2->nodeCount() - $connectedComponent1->nodeCount();
     }
     
+    
     public static function getConnectedComponentsJSON(array $rdfResults, $similarityThreshold)
     {
         $graphSimilarity = new GraphSimilarity();
@@ -173,10 +180,20 @@ class GraphSimilarity
             $connectedComponent['graph'] = $graph->asArray();
             
             // Detect and set the main concept of the connected component
-            $mainConcept = $graphSimilarity->getMainConceptOfConnectedComponent($graph);
-            $connectedComponent['mainConcept'] = array(
-                'uri' => $mainConcept
-            );
+            $conceptsData = $graphSimilarity->getMainConceptOfConnectedComponent($graph);
+            
+            if (!empty($conceptsData)) {
+                $connectedComponent['mainConcept'] = array(
+                    'uri' => $conceptsData[0]
+                );
+                
+                // Set the tags (all the concepts)
+                $tags = array();
+                for ($i = 0, $nbConcepts = count($conceptsData); $i < $nbConcepts; $i++) {
+                    $tags[] = Utils::getShortNameURL($conceptsData[$i]);
+                }
+                $connectedComponent['tags'] = $tags;
+            }
             
             // Set the external links
             $externLinks = array();
