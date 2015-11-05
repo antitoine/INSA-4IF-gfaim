@@ -86,13 +86,23 @@ class TextExtractor
         $xpath = new DOMXPath($dom);
         $nodeList = $xpath->query('//div/text()|//h1/text()|//h2/text()|//h3/text()|//span/text()|//p/text()');
 
-        $order   = array("\r\n", "\n", "\r");
-        $replace = ' ';
+        $toReplace   = array("\r\n", "\n", "\r");
 
         foreach($nodeList as $node)
         {
             if(!empty(trim($node->textContent)))
-                $text .= str_replace($order, $replace, trim($node->textContent)) . ' ';
+            {
+                $text .= str_replace($toReplace, ' ', trim($node->textContent));
+                if (in_array(substr($text, -1), array( ',', '.', ';', '!', '?')))
+                {
+                    $text .= ' ';
+                }
+                else if (!in_array(substr($text, -2), array( ',', '.', ';', '!', '?')))
+                {
+                    $text .= '. ';
+                }
+            }
+
         }
         return $text;
     }
@@ -101,14 +111,13 @@ class TextExtractor
      * Get all text of tests urls (used to test this module)
      */
     public static function getAllTextTest() {
-        // getAllText (texte final récupéré pour toutes les url)
-        return self::getAllText(array('http://allrecipes.com/recipe/7281/chocolate-cherry-cake-i/', 'http://www.pillsbury.com/recipes/chocolate-cherry-bars/15d6f3ce-21b3-43fb-8cb0-b33fb4177d3e'));
-
-        // getTextFromHtml (texte final récupéré pour une seule page html)
-        //return self::getTextFromHtml('html');
-
-        // getHtmlOfUrl
-        //return self::getHtmlOfUrl('http://allrecipes.com/recipe/7281/chocolate-cherry-cake-i/');
+        return self::getAllText(
+            array(
+                'http://allrecipes.com/recipe/7281/chocolate-cherry-cake-i/',
+                'http://www.pillsbury.com/recipes/chocolate-cherry-bars/15d6f3ce-21b3-43fb-8cb0-b33fb4177d3e',
+                'http://allrecipes.com/recipe/39846/tomato-cold-soup-with-parmesan-cheese-ice-cream/'
+                )
+            );
     }
 
 }
