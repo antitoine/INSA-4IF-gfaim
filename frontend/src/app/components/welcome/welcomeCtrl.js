@@ -23,6 +23,13 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
                 step :0.2,
                 max: 2,
                 value : 1
+            },
+            nbPages : {
+                sliderValue : 10,
+                min : 2,
+                step :2,
+                max: 20,
+                value : 10
             }
         };
 
@@ -64,19 +71,14 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
             edges: $scope.edges
         };
 
+        $scope.network_options = {
+
+        };
+
         var container = document.getElementById('container-network');
         $scope.network = new vis.Network(container, $scope.network_data, $scope.network_options || {});
 
-        $scope.network_options = {
-            "edges": {
-                "smooth": false
-            },
-            "physics": {
-                "enabled": false,
-                "minVelocity": 0.75
-            }
-        };
-
+        var ind = 500;
 
         $scope.resetGraph = function () {
             $scope.nodes.clear();
@@ -87,33 +89,11 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
             //}
         };
 
-/*        $scope.onNodeSelect = function (params) {
-
+        $scope.onNodeSelect = function (params) {
             if (params.nodes[0]) {
-                var selected = params.nodes[0];
-                console.log(params);
-                if (selected == 0 && !isConceptsShowing) {
-                    $scope.addConcepts();
-                    isConceptsShowing = true;
-                }
-                if (conceptsInfos[selected]) {
-                    if (selected != 0 && !conceptsInfos[selected].isShowing) {
-                        clickConcept(selected);
-                    } else {
-                        var connectedNodes = $scope.network.getConnectedNodes(selected);
-                        for (var i = 0; i < connectedNodes.length; i++) {
-                            if (connectedNodes !== 0) {
-                                $scope.nodes.remove({id: connectedNodes[i]});
-                            }
-                            conceptsInfos[selected].isShowing = false;
-                        }
-                    }
-                } else {
-                    clickConcept(selected);
-                }
+
             }
-            $scope.redraw(2000);
-        };*/
+        };
 
 /*        var clickConcept = function (groupid) {
             for (var i = 0; i < 5; i++) {
@@ -150,7 +130,8 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
 
             $scope.canceler = $q.defer();
 
-            searchService.search($scope.query, $scope.sliders.confidence.sliderValue,
+            searchService.search($scope.query, $scope.sliders.nbPages.sliderValue,
+                $scope.sliders.confidence.sliderValue,
                 $scope.sliders.similarity.sliderValue, $scope.canceler)
                 .then(function (result) {
                     $scope.searchingInProcess = false;
@@ -179,7 +160,7 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
             for(var i = 0; i < $scope.results.length; i ++){
                 index++;
                 if($scope.results[i].mainConcept === undefined){
-                    $scope.nodes.add({label : 'no main concept', id : index, group : index});
+                    $scope.nodes.add({label : 'unknown', id : index, group : index});
                 }else {
                     $scope.nodes.add({label: $scope.results[i].mainConcept.name || '', id : index, title:$scope.results[i].mainConcept.uri,
                         group : index});
@@ -189,7 +170,7 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
                 for(var j = 0; j < $scope.results[i].graph.nodes.length; j++){
                     $scope.results[i].graph.nodes[j].group = index;
                     nodes.push($scope.results[i].graph.nodes[j]);
-                    $scope.edges.add({from: $scope.results[i].graph.nodes[j].id, to : index});
+                    $scope.edges.add({from:index , to :  $scope.results[i].graph.nodes[j].id});
                 }
                 for(var j = 0; j < $scope.results[i].graph.edges.length; j++){
                     edges.push($scope.results[i].graph.edges[j]);
@@ -200,10 +181,14 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
             $scope.nodes.add(nodes);
             $scope.edges.add(edges);
 
+            $scope.nodes.add({id: 500, label: "new"});
+            $scope.edges.add({from: 0, to: 500});
+            $scope.nodes.remove({id: 500, label: "new"});
+
         }
 
         $scope.redraw = function (time) {
-            timeout = time || 500;
+            var timeout = time || 500;
             $timeout(function () {
                 var options = {
                     offset: {x: 0, y: 0},

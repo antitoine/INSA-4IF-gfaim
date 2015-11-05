@@ -23,7 +23,7 @@
                                 aria-expanded="false" aria-controls="optionsPanel">
                             Advanced Options
                         </button>
-                        <a href="#" ng-click="cancelRequest()" ng-show="isSearching" class="btn btn-primary"
+                        <a ng-href="#" ng-click="cancelRequest()" ng-show="isSearching" class="btn btn-primary"
                            type="button">
                             Cancel Search
                         </a>
@@ -36,36 +36,52 @@
 
     <div class="collapse" id="optionsPanel">
         <div class="well">
-            <h3>Options</h3>
+            <div class="container">
+                <h3>Options</h3>
 
-            <div class="row">
-                <div class="col-md-2">
-                    <p>
-                        Similarity Threshold : ({{sliders.similarity.sliderValue}})
-                    </p>
+                <div class="row">
+                    <div class="col-md-2">
+                        <p>
+                            Similarity Threshold: ({{sliders.similarity.sliderValue}})
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <slider ng-model="sliders.similarity.sliderValue"
+                                min="sliders.similarity.min"
+                                step="sliders.similarity.step"
+                                max="sliders.similarity.max"
+                                value="sliders.similarity.value">
+                        </slider>
+                    </div>
+                    <div class="col-md-2 col-md-offset-2">
+                        <p>
+                            Number of pages: ({{sliders.nbPages.sliderValue}})
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <slider ng-model="sliders.nbPages.sliderValue"
+                                min="sliders.nbPages.min"
+                                step="sliders.nbPages.step"
+                                max="sliders.nbPages.max"
+                                value="sliders.nbPages.value">
+                        </slider>
+                    </div>
                 </div>
-                <div class="col-md-2">
-                    <slider ng-model="sliders.similarity.sliderValue"
-                            min="sliders.similarity.min"
-                            step="sliders.similarity.step"
-                            max="sliders.similarity.max"
-                            value="sliders.similarity.value">
-                    </slider>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-2">
-                    <p>
-                        Confidence Value : ({{sliders.confidence.sliderValue}})
-                    </p>
-                </div>
-                <div class="col-md-2">
-                    <slider ng-model="sliders.confidence.sliderValue"
-                            min="sliders.confidence.min"
-                            step="sliders.confidence.step"
-                            max="sliders.confidence.max"
-                            value="sliders.confidence.value">
-                    </slider>
+                <div class="row">
+                    <div class="col-md-2">
+                        <p>
+                            Confidence Value: ({{sliders.confidence.sliderValue}})
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <slider ng-model="sliders.confidence.sliderValue"
+                                min="sliders.confidence.min"
+                                step="sliders.confidence.step"
+                                max="sliders.confidence.max"
+                                value="sliders.confidence.value">
+                        </slider>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -117,7 +133,7 @@
                            wiki={{element.mainConcept.wikipediaUrl}}
                            main-description={{element.mainConcept.description}}>
                 <div ng-repeat="link in element.externLinks">
-                    <h4><a target="_blank" href={{link.url}}>{{link.title}}</a></h4>
+                    <h4><a target="_blank" ng-href={{link.url}}>{{link.title}}</a></h4>
 
                     <p>{{link.description}}</p>
                 </div>
@@ -128,13 +144,16 @@
                     <div ng-repeat="recipie in element.mainConcept.recipies" class="col-sm-2 img-recipies">
                         <img class="img-responsive img-box-recipies"
                              actual-src={{recipie.image}}
-                             ng-src="http://a4.mzstatic.com/us/r30/Purple3/v4/1f/57/ef/1f57ef5a-23ad-f54d-f93a-63b813ea94ca/icon256.png" >
-                        <p style="text-align:center"><a target="_blank" href={{recipie.wikipediaUrl}}>{{recipie.name | limitTo : 20}}</a></p>
+                             ng-src="http://a4.mzstatic.com/us/r30/Purple3/v4/1f/57/ef/1f57ef5a-23ad-f54d-f93a-63b813ea94ca/icon256.png">
+
+                        <p style="text-align:center"><a target="_blank" ng-href={{recipie.wikipediaUrl}}>{{recipie.name |
+                            limitTo : 20}}</a></p>
                     </div>
                 </div>
                 <hr>
                 <div class="row">
-                            <span ng-repeat="tag in element.tags" style="padding: 5px; margin: 3px; display: inline-block;"
+                            <span ng-repeat="tag in element.tags"
+                                  style="padding: 5px; margin: 3px; display: inline-block;"
                                   class="btn-info btn-xs">
                                 {{tag}}
                             </span>
