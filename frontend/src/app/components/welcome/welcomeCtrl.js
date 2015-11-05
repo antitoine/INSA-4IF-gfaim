@@ -71,7 +71,19 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
             edges: $scope.edges
         };
 
-        $scope.network_options = {};
+        $scope.network_options = {
+            "edges": {
+                "smooth": {
+                    "forceDirection": "none"
+                }
+            },
+            "interaction": {
+                "hover": true
+            },
+            "physics": {
+                "minVelocity": 0.75
+            }
+        };
 
         var container = document.getElementById('container-network');
         $scope.network = new vis.Network(container, $scope.network_data, $scope.network_options || {});
@@ -81,37 +93,14 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
         $scope.resetGraph = function () {
             $scope.nodes.clear();
             $scope.edges.clear();
-            isConceptsShowing = false;
-            //for (var index in conceptsInfos) {
-            //    //conceptsInfos[index].isShowing = false;
-            //}
         };
 
         $scope.onNodeSelect = function (params) {
-            if (params.nodes[0]) {
+            if (params.nodes[0] && params.nodes[0] != 0) {
                 var n = $scope.nodes.get(params.nodes[0]);
                 window.open(n.title, '_newtab');
             }
         };
-
-        /*        var clickConcept = function (groupid) {
-         for (var i = 0; i < 5; i++) {
-         $scope.nodes.add({id: index, group: groupid});
-         $scope.edges.add({from: index, to: groupid});
-         index++;
-         }
-         conceptsInfos[groupid].isShowing = true;
-         };*/
-
-        /*        $scope.addConcepts = function () {
-         $scope.nodes.add($scope.concepts);
-         for (var i = 0; i < $scope.concepts.length; i++) {
-         $scope.edges.add(
-         {from: 0, to: $scope.concepts[i].id}
-         );
-         }
-         };*/
-
 
         $scope.search = function () {
             if ($scope.query === undefined) {
