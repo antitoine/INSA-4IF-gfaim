@@ -18,7 +18,7 @@ class TextAnnotation
             'POST', SPOTLIGHT_URL,
             'text=' . urlencode($text) . '&confidence='. $confidence .'&types=' . urlencode('freebase:food')
         );
-
+        
         $apiResultsJSON = json_decode($apiResults);
 
         // There is no result returned by the spotlight API

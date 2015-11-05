@@ -6,6 +6,7 @@ class Graph
 	private $edges;
 	private $nodes;
 	private $nodesId;
+	private $nodeIdCurrent;
 
 	private $nodesColor;
 	private $maxColor;
@@ -20,6 +21,7 @@ class Graph
 		$this->maxColor = 0;
 		
 		$this->nodesId = array();
+		$this->nodeIdCurrent = 1;
 	}	
 
 	public function nodeExists($name)
@@ -34,7 +36,8 @@ class Graph
 			$this->adj_mat[$name] = array();
 			
 			if ($id == false) {
-				$this->nodesId[$name] = $this->nodes + 1;
+				$this->nodesId[$name] = $this->nodeIdCurrent;
+				$this->nodeIdCurrent++;
 			} else {
 				$this->nodesId[$name] = $id;
 			}
@@ -67,6 +70,8 @@ class Graph
 		} 
 
     	unset($this->adj_mat[$name]);
+    	unset($nodesId[$name]);
+    	
     	$this->nodes--;
 	}
 
@@ -230,6 +235,7 @@ class Graph
 				
 				foreach ($this->adj_mat[$node] as $destNode => $weight)
 				{
+					$graph->addNode($destNode, $this->nodesId[$destNode]);
 					$graph->addEdge($node, $destNode, $weight);
 				}
 			}
@@ -256,7 +262,7 @@ class Graph
 			$nodes[] = array(
 				'id' => $this->nodesId[$currentNode],
 				'title' => $currentNode,
-				'label' => $shortName
+				'label' => 'url'
 			);
 		}
 		
@@ -275,7 +281,8 @@ class Graph
 					$edges[] = array(
 						'from' => $this->nodesId[$startNode],
 						'to' => $this->nodesId[$destNode],
-						'title' => $weight
+						'title' => $weight,
+						'value' => $weight
 					);
 					
 					$edgesAdded[] = $this->nodesId[$startNode] . '-' . $this->nodesId[$destNode];

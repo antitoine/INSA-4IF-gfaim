@@ -120,6 +120,11 @@ class ResultEnhancer {
                 $filters[] = '{ <'.$uri.'> <'.PROPERTY_GENUS.'> ?genus. '.
                              '?s ?p ?o. '.
                              'FILTER (?p in (<'.PROPERTY_GENUS.'>) && ?o in (?genus)) }';
+            } else if ($predicate == PROPERTY_MAININGREDIENTOF) {
+                $filters[] = '{ ?recipie <'.PROPERTY_MAININGREDIENTOF.'> <'.$uri.'>. '.
+                                '{ ?s ?p ?o. FILTER (?s in (?recipie) && ?p in (<'.GENERAL_INFO_LABEL.'>) && (LANG(?o)=\'en\' || LANG(?o)=\'\')) } '.
+                          'UNION { ?s ?p ?o. FILTER (?s in (?recipie) && ?p in (<'.PROPERTY_RECIPIE_IMAGE.'>)) } '.
+                          'UNION { ?s ?p ?o. FILTER (?s in (?recipie) && ?p in (<'.GENERAL_INFO_PRIMARYTOPIC.'>)) } } ';
             } else {
                 $filters[] = '{ ?s ?p ?o. FILTER(?s in (<'. $uri .'>) '. 
                                                 ' && (?p in (<'.$predicate.'>)) '.
@@ -133,7 +138,7 @@ class ResultEnhancer {
     
     public static function getGeneralInfos($uri) {
         $predicatesEnglish = array(GENERAL_INFO_LABEL, GENERAL_INFO_COMMENT, GENERAL_INFO_IMAGECAPTION);
-        $predicates = array(GENERAL_INFO_THUMBNAIL, GENERAL_INFO_PRIMARYTOPIC);
+        $predicates = array(GENERAL_INFO_THUMBNAIL, GENERAL_INFO_PRIMARYTOPIC, PROPERTY_MAININGREDIENTOF);
 
         return self::getAllTriples($uri, $predicatesEnglish, $predicates);
     }
