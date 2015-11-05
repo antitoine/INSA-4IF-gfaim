@@ -213,28 +213,28 @@ class GraphSimilarity
     public static function getConnectedComponentsJSONTest()
     {
         $rdfGraphs = array(
-            'aaaa/url_1' => array(
+            'http://aaaa.fr/url_1' => array(
                 array('http://dbpedia.org/resource/Pea', 'dbp:f5at', '1.0'),
                 array('http://dbpedia.org/resource/Pea', 'dbp:fat', '0.4'),
                 array('http://dbpedia.org/resource/Pea', 'dbp:kj', '339'),
                 array('http://dbpedia.org/resource/Pea', 'dbp:kj', '1425')
             ),
             
-            'url 2' => array(
+            'http://www.url1.com' => array(
                 array('http://dbpedia.org/resource/Pea', 'dbp:fat', '1.0'),
                 array('http://dbpedia.org/resource/Pea', 'dbp:fat', '0.4'),
                 array('http://dbpedia.org/resource/Pea', 'dbp:kj', '10'),
                 array('http://dbpedia.org/resource/Pea', 'dbp:kj', '1425')
             ),
             
-            'url 8' => array(
+            'http://www.url3.com/ssss' => array(
                 array('http://dbpedia.org/resource/Pea', 'dbp:fat', '1.0'),
                 array('http://dbpedia.org/resource/Pea', 'dbp:fat', '0.4'),
                 array('http://dbpedia.org/resource/Pea', 'dbp:kj', '10'),
                 array('http://dbpedia.org/resource/Pea', 'dbp:kj', '1425')
             ),
             
-            'url 3' => array(
+            'http://zzzz.com/zzf' => array(
                 array('http://dbpedia.org/resource/Pea', 'dif', '1.0'),
                 array('http://dbpedia.org/resource/Pea', 'dif', '0.4'),
                 array('http://dbpedia.org/resource/Pea', 'dif', '10'),

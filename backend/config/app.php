@@ -27,6 +27,8 @@ const SEARCH_ENGINE_KEYS_FOOD = array(
 
 const NUMBER_OF_SEARCH_ENGINE_KEYS = 3;
 
+const DEFAULT_NUMBER_OF_PAGES = 10;
+
 /**
  * TextExtractor Configuration
  */

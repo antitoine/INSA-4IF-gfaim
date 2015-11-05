@@ -10,17 +10,24 @@ class SearchEngineExtraction
     /**
      * Execute a query through the google custom search engine.
      * @param query The query to execute.
+     * @param nbMaxResults The number max of links to return
      * @return Collection of links returned by the google custom search engine.
      */
-    public static function getResultLinksOfQuery($query, $APIKeyNumber = 0)
+    public static function getResultLinksOfQuery($query, $nbMaxResults = DEFAULT_NUMBER_OF_PAGES, $APIKeyNumber = 0)
     {
-        $cache = Cache::getInstance();
-        $resultOfQueryCached = $cache->getResultListOfModuleOneByQuery($query);
-        
-        if ($resultOfQueryCached != null && !empty($resultOfQueryCached))
-        {
-            return $resultOfQueryCached;
+        // If the nb max of results is equals to the default number, we cas use
+        // the cache
+        if ($nbMaxResults == DEFAULT_NUMBER_OF_PAGES) {
+            $cache = Cache::getInstance();
+            $resultOfQueryCached = $cache->getResultListOfModuleOneByQuery($query);
+            
+            if ($resultOfQueryCached != null && !empty($resultOfQueryCached))
+            {
+                return $resultOfQueryCached;
+            }
         }
+        
+        $nbMaxResultsByRequest = $nbMaxResults / 2;
 
         $links = array();
 
@@ -29,7 +36,8 @@ class SearchEngineExtraction
             'cx' => GOOGLE_SEARCH_CX,
             'q' => 'recipes '.$query,
             'safe' => 'high',
-            'lr' => 'lang_en'
+            'lr' => 'lang_en',
+            'num' => $nbMaxResultsByRequest
         ));
 
         $googleResultsJSONRecipes = json_decode($googleResultsRecipes, true);
@@ -39,7 +47,8 @@ class SearchEngineExtraction
             'cx' => GOOGLE_SEARCH_CX,
             'q' => 'food '.$query,
             'safe' => 'high',
-            'lr' => 'lang_en'
+            'lr' => 'lang_en',
+            'num' => $nbMaxResultsByRequest
         ));
 
         $googleResultsJSONFood = json_decode($googleResultsFood, true);
@@ -48,7 +57,7 @@ class SearchEngineExtraction
         {
             if ($APIKeyNumber < NUMBER_OF_SEARCH_ENGINE_KEYS)
             {
-                return self::getResultLinksOfQuery($query, $APIKeyNumber + 1);
+                return self::getResultLinksOfQuery($query, $nbMaxResults, $APIKeyNumber + 1);
             }
             else
             {
@@ -71,9 +80,11 @@ class SearchEngineExtraction
                 'description' => $item['snippet']
             ); 
         }
-
-        $cache->setResultListInModuleOne($query, $links);
-
+        
+        if ($nbMaxResults == DEFAULT_NUMBER_OF_PAGES) {
+            $cache->setResultListInModuleOne($query, $links);
+        }
+        
         return $links;
     }
 
