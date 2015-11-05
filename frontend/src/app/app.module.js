@@ -1,5 +1,6 @@
 "use strict";
 
+
 var gfaimApp = angular.module('gfaimApp', [
     'ui.router',
     'ui.router.stateHelper',
@@ -32,7 +33,7 @@ function start(Restangular, $http, $state, Notification, $rootScope, $log, $time
         function (response) {
             // https://fr.wikipedia.org/wiki/Liste_des_codes_HTTP
             Notification.error("Erreur HTTP : " + response.status);
-            return false;
+            return true;
         }
     );
 

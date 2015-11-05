@@ -17,42 +17,42 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
             value : 4
         };
 
-        $scope.res =
+        $scope.results =
             [{
                 "graph": {
                     "nodes": [{
                         "id": 1,
-                        "label": "http://allrecipes.com/recipe/39544/garden-fresh-tomato-soup/"
+                        "title": "http://allrecipes.com/recipe/39544/garden-fresh-tomato-soup/"
                     }, {
-                        "id": 1,
-                        "label": "http://allrecipes.com/recipes/14731/soups-stews-and-chili/soup/vegetable-soup/tomato-soup/"
-                    }, {"id": 1, "label": "http://www.chowhound.com/recipes/creamy-tomato-soup-10836"}, {
-                        "id": 1,
-                        "label": "http://www.finecooking.com/recipes/meyers-classic-tomato-soup.aspx"
+                        "id": 2,
+                        "title": "http://allrecipes.com/recipes/14731/soups-stews-and-chili/soup/vegetable-soup/tomato-soup/"
+                    }, {"id": 3, "title": "http://www.chowhound.com/recipes/creamy-tomato-soup-10836"}, {
+                        "id": 4,
+                        "title": "http://www.finecooking.com/recipes/meyers-classic-tomato-soup.aspx"
                     }, {
-                        "id": 1,
-                        "label": "http://www.foodnetwork.com/recipes/ree-drummond/best-tomato-soup-ever.html"
-                    }, {"id": 1, "label": "http://www.marthastewart.com/315123/tomato-soup"}, {
-                        "id": 1,
-                        "label": "http://www.vegrecipesofindia.com/tomato-soup-recipe-restaurant-style/"
-                    }, {"id": 1, "label": "http://www.food.com/recipe/roasted-tomato-soup-131639"}],
-                    "edges": [{"from": 0, "to": 1, "label": 0.31297709923664}, {
+                        "id": 5,
+                        "title": "http://www.foodnetwork.com/recipes/ree-drummond/best-tomato-soup-ever.html"
+                    }, {"id": 6, "title": "http://www.marthastewart.com/315123/tomato-soup"}, {
+                        "id": 7,
+                        "title": "http://www.vegrecipesofindia.com/tomato-soup-recipe-restaurant-style/"
+                    }, {"id": 8, "title": "http://www.food.com/recipe/roasted-tomato-soup-131639"}],
+                    "edges": [{"from": 0, "to": 1, "title": 0.31297709923664}, {
                         "from": 0,
                         "to": 2,
-                        "label": 0.2803738317757
-                    }, {"from": 0, "to": 3, "label": 0.35211267605634}, {
+                        "title": 0.2803738317757
+                    }, {"from": 0, "to": 3, "title": 0.35211267605634}, {
                         "from": 0,
                         "to": 4,
-                        "label": 0.23170731707317
-                    }, {"from": 0, "to": 5, "label": 0.42666666666667}, {
+                        "title": 0.23170731707317
+                    }, {"from": 0, "to": 5, "title": 0.42666666666667}, {
                         "from": 1,
                         "to": 3,
-                        "label": 0.26315789473684
-                    }, {"from": 1, "to": 5, "label": 0.26923076923077}, {"from": 1, "to": 6, "label": 0.2}, {
+                        "title": 0.26315789473684
+                    }, {"from": 1, "to": 5, "title": 0.26923076923077}, {"from": 1, "to": 6, "title": 0.2}, {
                         "from": 2,
                         "to": 3,
-                        "label": 0.22377622377622
-                    }, {"from": 4, "to": 5, "label": 0.2093023255814}, {"from": 5, "to": 7, "label": 0.27083333333333}]
+                        "title": 0.22377622377622
+                    }, {"from": 4, "to": 5, "title": 0.2093023255814}, {"from": 5, "to": 7, "title": 0.27083333333333}]
                 },
                 "mainConcept": {
                     "name": "name",
@@ -64,7 +64,7 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
                 "externLinks": [{"url": "http://allrecipes.com/recipe/39544/garden-fresh-tomato-soup/"}, {"url": "http://allrecipes.com/recipes/14731/soups-stews-and-chili/soup/vegetable-soup/tomato-soup/"}, {"url": "http://www.chowhound.com/recipes/creamy-tomato-soup-10836"}, {"url": "http://www.finecooking.com/recipes/meyers-classic-tomato-soup.aspx"}, {"url": "http://www.foodnetwork.com/recipes/ree-drummond/best-tomato-soup-ever.html"}, {"url": "http://www.marthastewart.com/315123/tomato-soup"}, {"url": "http://www.vegrecipesofindia.com/tomato-soup-recipe-restaurant-style/"}, {"url": "http://www.food.com/recipe/roasted-tomato-soup-131639"}]
             }, {
                 "graph": {
-                    "nodes": [{"id": 1, "label": "http://www.eatingwell.com/recipes/tomato_soup.html"}],
+                    "nodes": [{"id": 1, "title": "http://www.eatingwell.com/recipes/tomato_soup.html"}],
                     "edges": []
                 },
                 "mainConcept": {
@@ -79,7 +79,7 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
                 "graph": {
                     "nodes": [{
                         "id": 1,
-                        "label": "http://www.cookinglight.com/eating-smart/smart-choices/healthy-lunch-ideas/fresh-tomato-soup-recipes"
+                        "title": "http://www.cookinglight.com/eating-smart/smart-choices/healthy-lunch-ideas/fresh-tomato-soup-recipes"
                     }], "edges": []
                 },
                 "mainConcept": {
@@ -134,10 +134,10 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
         };
 
         $scope.concepts = [
-            {id: 1, label: "chocolat", group: 2},
-            {id: 2, label: "fraise", group: 2},
-            {id: 3, label: "carotte", group: 2},
-            {id: 4, label: "recette", group: 2}
+            {id: 1, title: "chocolat", group: 2},
+            {id: 2, title: "fraise", group: 2},
+            {id: 3, title: "carotte", group: 2},
+            {id: 4, title: "recette", group: 2}
         ];
 
         $scope.network_data = {
@@ -151,6 +151,20 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
         $scope.network_options = {
             "interaction": {
                 "hover": true
+            },
+            "edges": {
+                "smooth": {
+                    "forceDirection": "none"
+                }
+            },
+            "physics": {
+                "forceAtlas2Based": {
+                    "gravitationalConstant": -47,
+                    "springLength": 220,
+                    "avoidOverlap": 1
+                },
+                "minVelocity": 0.75,
+                "solver": "forceAtlas2Based"
             }
         };
 
@@ -212,13 +226,18 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
 
 
         $scope.search = function () {
+            if($scope.query === undefined){
+                return;
+            }
             iterateSearch(3);
             $scope.loadingText = "Loading ...";
             $scope.loadingSubText= "This could take a while";
-
+            $scope.searchingDone = false;
             $scope.isSearching = true;
             $scope.searchingInProcess = true;
             $scope.resetGraph();
+            createGraph();
+
             $scope.nodes.add([
                 {id: 0, label: $scope.query, group: 0}
             ]);
@@ -228,8 +247,34 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
                     $scope.searchingDone = true;
                     $scope.results.length = 0;
                     $scope.results = result;
+                }, function () {
+                    $scope.searchFailed = true;
+                    $scope.searchingInProcess = false;
                 })
         };
+
+        function createGraph(){
+            var nodes = [];
+            var edges = [];
+            var incr = 0;
+            for(var i = 0; i < $scope.results.length; i ++){
+                for(var j = 0; j < $scope.results[i].graph.nodes.length; j++){
+                    $scope.results[i].graph.nodes[j].id += incr;
+                    nodes.push($scope.results[i].graph.nodes[j]);
+                }
+                for(var j = 0; j < $scope.results[i].graph.edges.length; j++){
+                    $scope.results[i].graph.edges[j].from += incr;
+                    $scope.results[i].graph.edges[j].to += incr;
+                    edges.push($scope.results[i].graph.edges[j]);
+                }
+                incr = incr + $scope.results[i].graph.nodes.length;
+            }
+            console.log(nodes);
+            console.log(edges);
+            $scope.nodes.add(nodes);
+            $scope.edges.add(edges);
+
+        }
 
         $scope.redraw = function (time) {
             timeout = time || 500;
