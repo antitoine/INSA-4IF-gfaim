@@ -1,90 +1,61 @@
 <?php
 
 class GFaimSearchEngine {
-    /*
-    private static function getConceptData(&$rdfData, $conceptUri) {
-        $label = '';
-        $image = '';
-        $imageCaption = '';
-        $comment = '';
-        
-        foreach ($rdfData as $triplesList) {
-            foreach ($triplesList as $triple) {
-                if ($triple[0] == $conceptUri) {
-                    switch ($triple[1]) {
-                        case 'rdfs:label':
-                            $label = $triple[2];
-                            break;
+
+    private static function getConceptData($uri) {
+
+        $generalInfo = ResultEnhancer::getGeneralInfos($uri);
+
+        $conceptData = array(
+            'name' => '',
+            'description' => '',
+            'wikipediaUrl' => '',
+            'image' => '',
+            'imageCaption' => '',
+            'uri' => $uri
+        );
+
+        foreach ($generalInfo as $triple) {
+            switch ($triple[1]) {
+                case GENERAL_INFO_LABEL:
+                    $conceptData['name'] = $triple[2];
+                    break;
                         
-                        case 'rdfs:comment':
-                            $comment = $triple[2];
-                            break;
-                            
-                        case 'dbo:thumbnail':
-                            $image = $triple[2];
-                            break;
-                        
-                        case 'dbp:imageCaption':
-                            $imageCaption = $triple[2];
-                            break;
-                    }
+                case GENERAL_INFO_COMMENT:
+                    $conceptData['description'] = $triple[2];
+                    break;
                     
-                    if (!empty($label) && !empty($image) && !empty($imageCaption) && !empty($comment)) {
-                        break 2;
-                    }
-                }
+                case GENERAL_INFO_PRIMARYTOPIC:
+                    $conceptData['wikipediaUrl'] = $triple[2];
+                    break;
+                    
+                case GENERAL_INFO_THUMBNAIL:
+                    $conceptData['image'] = $triple[2];
+                    break;
+                    
+                case GENERAL_INFO_IMAGECAPTION:
+                    $conceptData['imageCaption'] = $triple[2];
+                    break;
             }
         }
-        
-        return array(
-            'label' => $label,
-            'comment' => $comment,
-            'image' => $image,
-            'imageCaption' => $imageCaption
-        );
-    }*/
-    
-    private static function addMainDataData(&$finalData, &$rdfData) {
-        /*foreach ($finalData as $key => $connectedComponent) {
-            $mainConceptURI = $connectedComponent['mainConcept']['uri'];
-            
-            if (!empty($mainConceptURI)) {
-                $dataMainConception = self::getConceptData($mainConceptURI);
-                $finalData[$key]['mainConcept'] = array(
-                    'name' => $dataMainConception['label'],
-                    'uri' => $mainConceptURI,
-                    'image' => $dataMainConception['image'],
-                    'imageCaption' => $dataMainConception['imageCaption'],
-                    'description' => $dataMainConception['comment']
-                );
-            }
-        }*/
-        
+
+        return $conceptData;
+    }
+
+    private static function addMainConceptsData(&$finalData, &$rdfData) {
         foreach ($finalData as $key => $connectedComponent) {
             $mainConceptURI = $connectedComponent['mainConcept']['uri'];
-            
+
             if (!empty($mainConceptURI)) {
-                $conceptDetails = ResultEnhancer::getGeneralInfos($mainConceptURI);
-                echo '<pre>';
-                var_dump($conceptDetails);
-                echo '</pre>';
-                /*
-                $finalData[$key]['mainConcept'] = array(
-                    'name' => $conceptDetails[0],
-                    'description' => $conceptDetails[1],
-                    'wikipediaUrl' => $conceptDetails[2],
-                    'image' => $conceptDetails[3],
-                    'imageCaption' => $conceptDetails[4],
-                    'uri' => $mainConceptURI
-                );*/
+                $finalData[$key]['mainConcept'] = self::getConceptData($mainConceptURI);
             }
         }
     }
-    
+
     public static function addExternLinksData(&$finalData, &$googleResults) {
         foreach ($finalData as $key => $connectedComponent) {
             $externLinks = $connectedComponent['externLinks'];
-            
+
             if (!empty($externLinks)) {
                 foreach ($externLinks as $urlKey => $urlData) {
                     $urlDetails = $googleResults[$urlData['url']];
@@ -98,35 +69,33 @@ class GFaimSearchEngine {
             }
         }
     }
-    
-    public static function search($query, $thresholdSimilarity = 0.2) {
-        
+
+    /**
+     * Give the result of recepies of the GFaimSearchEngine by a query of ingredients
+     * @param $query the query of ingredients
+     * @param $confidence the level of confidence when spotlight is call (between 0 and 1)
+     * @param $similarity the level of similarity when the graph is genereted
+     * @return an array TODO
+     */
+    public static function search($query, $confidence = SPOTLIGHT_DEFAULT_CONFIDENCE, $similarity = GRAPH_DEFAULT_SIMILARITY) {
+
         $googleResults = SearchEngineExtraction::getResultLinksOfQuery($query);
-        
+
         $annotatedUrls = TextAnnotation::annotateTexts(
                             TextExtractor::getAllText(
                                 array_keys($googleResults)
-                            )
+                            ), 
+                            $confidence
                         );
-                    
+
         $enhancedResults = ResultEnhancer::Process($annotatedUrls);
-    
-        $connectedComponents = GraphSimilarity::getConnectedComponentsJSON($enhancedResults, $thresholdSimilarity);
-    
-    //echo '<pre>';
-    //var_dump($connectedComponents);
-    //echo '</pre>';
-    
+        $connectedComponents = GraphSimilarity::getConnectedComponentsJSON($enhancedResults, $similarity);
+
         // Add additional data : complete data for each main concept
-        //self::addMainDataData($connectedComponents, $enhancedResults);
-        
+        self::addMainConceptsData($connectedComponents, $enhancedResults);
+
         // Add additional data : complete data for each extern links
         self::addExternLinksData($connectedComponents, $googleResults);
-        
-        
-       // echo '--------------------------------------------------------------------------<br><pre>';
-    //var_dump($connectedComponents);
-    //echo '</pre>';*/
 
         return $connectedComponents;
     }

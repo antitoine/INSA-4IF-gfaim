@@ -53,4 +53,4 @@ const GENERAL_INFO_PRIMARYTOPIC = 'http://xmlns.com/foaf/0.1/isPrimaryTopicOf';
 /**
  * Graph
  */
-const GRAPH_DEFAULT_SIMILARITY = 1;
+const GRAPH_DEFAULT_SIMILARITY = 1.5;

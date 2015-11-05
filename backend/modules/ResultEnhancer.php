@@ -13,7 +13,9 @@ class ResultEnhancer {
     //SPARQL config
     const RSPARQL_PATH = '/opt/apache-jena-3.0.0/bin/';
     const SPARQL_QUERY_FILEPATH = '/var/www/gfaim/backend/var/result_enhancer_query/query.sparql'; 
+    const SPARQL_QUERY_RESULT_FILEPATH = '/var/www/gfaim/backend/var/result_enhancer_query/queryResults.json';
     const SPARQL_ENDPOINT = 'http://dbpedia.org/sparql';
+    
     // 
     // ASK et SELECT formats : 
     //      json,text,xml,csv,tsv
@@ -40,11 +42,27 @@ class ResultEnhancer {
      * @return Query response with the format specified using SPARQL_RESULT_FORMAT
      */
     private static function execSPARQLQuery( $sparqlQuery ) {
+        
+        // Generate the file name with a unique id
+        $uniquId = uniqid();
+        $sparqlFileName = self::SPARQL_QUERY_FILEPATH . $uniquId;
+        
         // Writes the given query in the file
-        file_put_contents(self::SPARQL_QUERY_FILEPATH, $sparqlQuery);
+        file_put_contents($sparqlFileName, $sparqlQuery);
         // Execute SPARQL query
-        $cmd = self::RSPARQL_PATH."rsparql --service ".self::SPARQL_ENDPOINT." --query ".self::SPARQL_QUERY_FILEPATH." --results ".self::SPARQL_RESULT_FORMAT;
-        return system($cmd);
+        $cmd = self::RSPARQL_PATH."rsparql --service ".self::SPARQL_ENDPOINT." --query ".$sparqlFileName." --results ".self::SPARQL_RESULT_FORMAT;
+        
+        $results = array();
+        
+        if (exec($cmd, $results)) {
+            $results = implode($results);;
+        } else {
+            $results = false;
+        }
+        
+        unlink($sparqlFileName);
+        
+        return $results;
     }
     
     
@@ -61,30 +79,50 @@ class ResultEnhancer {
         return "SELECT ?s ?p ?o WHERE { ?s $p ?o. FILTER(?s in (<$uri>) && (LANG(?o)='en' || LANG(?o)='' )) } ";
     }
     
-    private static function requestAllTriples($uri) {
-        return "SELECT ?s ?p ?o WHERE { ?s ?p ?o. FILTER(?s in (<$uri>) && (LANG(?o)='en' || LANG(?o)='' )) } ";
+    private static function requestAllTriples($uri, $predicates) {
+        $predicatesFilter = self::getPredicatesListFilter($uri, $predicates, true);
+        
+        return "SELECT ?s ?p ?o WHERE { " . $predicatesFilter . " } ";
     }
     
-    private static function requestAllTriplesNoFilter($uri) {
-        return "SELECT ?s ?p ?o WHERE { ?s ?p ?o. FILTER(?s in (<$uri>)) } ";
+    private static function requestAllTriplesNoFilter($uri, $predicates) {
+        $predicatesFilter = self::getPredicatesListFilter($uri, $predicates, false);
+        
+        return "SELECT ?s ?p ?o WHERE { " . $predicatesFilter . " } ";
     }
     
     private static function formatTripleFromPredicate($triple, $p) {
-        return "&lt;" . $triple->s->value . "&gt; &lt" . $p . "&gt; &lt;" . $triple->o->value . "&gt; <br/>";
+        return "&lt;" . $triple->s->value . "&gt; &lt;" . $p . "&gt; &lt;" . $triple->o->value . "&gt; <br/>";
     }
     
     private static function getRecipesLinkedToURI($uri) {
         return "SELECT ?recipe WHERE {   ?recipe dbo:ingredient dbr:". end(explode('/', $uri)) ." } ";
     }
     
+    private static function getPredicatesListFilter($uri, $predicates, $langFilter = false) {
+        
+        $filters = array();
+        
+        
+        foreach ($predicates as $predicate) {
+            $filters[] = '{ ?s ?p ?o. FILTER(?s in (<'. $uri .'>) '. 
+                                            (($langFilter == true) ? ' && (LANG(?o)=\'en\' || LANG(?o)=\'\') ' : '' ) 
+                                            . ' && (?p in (<'.$predicate.'>))'
+                                            .') }';
+        }
+        
+        return implode(' UNION ', $filters);
+    }
+    
+    
     public static function getGeneralInfos($uri) {
-        $predicatesEnglish = array("http://www.w3.org/2000/01/rdf-schema#label",
-                            "http://www.w3.org/2000/01/rdf-schema#comment",
-                            "http://xmlns.com/foaf/0.1/isPrimaryTopicOf",
-                            "http://dbpedia.org/property/imageCaption");
-        $predicates = array("http://dbpedia.org/ontology/thumbnail");
-        return array_merge(self::getAllTriples($uri, $predicatesEnglish),
-                            self::getAllTriplesNoFilter($uri, $predicates));
+        $predicatesEnglish = array(GENERAL_INFO_LABEL, GENERAL_INFO_COMMENT, GENERAL_INFO_IMAGECAPTION);
+        $predicates = array(GENERAL_INFO_THUMBNAIL, GENERAL_INFO_PRIMARYTOPIC);
+
+        return array_merge(
+            self::getAllTriples($uri, $predicatesEnglish),
+            self::getAllTriplesNoFilter($uri, $predicates)
+        );
     }
     
     // Do not use it separately - used in getTriplesFromPredicate
@@ -119,28 +157,36 @@ class ResultEnhancer {
     private static function constructAllTriples($response, $predicates) {
         // convert json response to php object
         $spo_triples = json_decode($response);
-        $triples = array();
+
         $triples = $spo_triples->{'results'}->{'bindings'};
-        //echo '<pre>'; var_dump($triples); echo '</pre>';
-        //die();
+        
         // format triples to a clean array
         $formattedTriples = array();
         foreach ($triples as $triple) {
            
-            if( in_array($triple->{'p'}->{'value'}, $predicates) ) {
+            
                 $formattedTriples = array_merge(
                     $formattedTriples,
                     array( array($triple->{'s'}->{'value'}, $triple->{'p'}->{'value'}, $triple->{'o'}->{'value'}) )
                 );   
-            }
+            
         }
         return $formattedTriples;
     }
     
     // Returns an array of all triples found for a predicate on a uri
     private static function getAllTriples($uri, $predicates) {
-        $query = self::buildHTTPRequest(self::requestAllTriples($uri));
-        $response = file_get_contents($query);
+        //SPARQL request choice
+        $remote = true;
+        if($remote) {
+            // Remote version - fast
+            $query = self::buildHTTPRequest(self::requestAllTriples($uri, $predicates));
+            $response = file_get_contents($query);
+        } else {
+            // Local SPARQL version - slow
+            $response = self::execSPARQLQuery(self::requestAllTriples($uri, $predicates));
+        }
+        
         $triples = self::constructAllTriples($response, $predicates);
         return $triples;
     }
@@ -148,9 +194,10 @@ class ResultEnhancer {
     // Returns an array of all triples found for a predicate on a uri without language filters
     private static function getAllTriplesNoFilter($uri, $predicates) {
         /* Deprecated
-        $query = self::buildHTTPRequest(self::requestAllTriples($uri));
+        $query = self::buildHTTPRequest(self::requestAllTriplesNoFilter($uri));
         $response = file_get_contents($query); */
-        $response = self::execSPARQLQuery(self::requestAllTriplesNoFilter($uri));
+        
+        $response = self::execSPARQLQuery(self::requestAllTriplesNoFilter($uri, $predicates));
         $triples = self::constructAllTriples($response, $predicates);
         return $triples;
     }
@@ -175,6 +222,8 @@ class ResultEnhancer {
         // Execution des requetes
         $requests = array();
         
+        $uriTriples = array();
+        
         $resultProcess = array();
         // Foreach list of uris
         foreach($results as $url => $uris) {
@@ -188,9 +237,15 @@ class ResultEnhancer {
                         $allTriples = array_merge($allTriples, $triples);
                     }
                 }*/
-                $triples = self::getAllTriples($uri, $predicates);
-                if(!empty($triples)) {
-                    $allTriples = array_merge($allTriples, $triples);
+                
+                if (!isset($uriTriples[$uri])) {
+                    $triples = self::getAllTriples($uri, $predicates);
+                    if(!empty($triples)) {
+                        $uriTriples[$uri] = $triples;
+                        $allTriples = array_merge($allTriples, $triples);
+                    }
+                } else {
+                    $allTriples = array_merge($allTriples, $uriTriples[$uri]);
                 }
             }
             $resultProcess[$url] = $allTriples;
@@ -207,7 +262,7 @@ class ResultEnhancer {
         $RESULTS = array(
            "http://www.lemonade.org" =>
                 array(     
-                   'rice' => 'http://dbpedia.org/resource/Rice',
+                   'rice' => 'http://dbpedia.org/resource/Onion',
                    'peas' => 'http://dbpedia.org/resource/Pea',
                    'herbes_de_provence' => 'http://dbpedia.org/resource/Herbes_de_Provence'
                 ),
@@ -222,5 +277,11 @@ class ResultEnhancer {
         );
 
         return self::Process($RESULTS);
+    }
+    
+    public static function ProcessTestDataConcept() {
+        $uri = 'http://dbpedia.org/resource/Tomato';
+        
+        return self::getGeneralInfos($uri);
     }
 }
