@@ -54,14 +54,20 @@ Flight::route('/search/test', function(){
  * Route to test the module 2
  */
 Flight::route('/extract/test', function () {
-    $result = TextExtractor::getAllTextTest();
+    $result = array();
+    
+    if (isset(Flight::request()->query['url']))
+    {
+        $url = Flight::request()->query['url'];
+        $result = TextExtractor::getAllText(array($url));
+    }
     Flight::json($result);
 });
 
 /**
  * Route to test the module 1 and 2
  */
-Flight::route('/search/and/extract/test', function () {
+Flight::route('/search/extract/test', function () {
     $result = array();
     
     if (isset(Flight::request()->query['q']))
@@ -78,7 +84,41 @@ Flight::route('/search/and/extract/test', function () {
  * Route to test the module 3
  */
 Flight::route('/annotate/test', function () {
-    Flight::json(TextAnnotation::annotateTextsTest());
+    $result = array();
+    
+    if (isset(Flight::request()->query['text']))
+    {
+        $text = Flight::request()->query['text'];
+        $confidence = 1;
+        if (isset(Flight::request()->query['confidence']))
+        {
+            $confidence = Flight::request()->query['confidence'];
+        }
+        $result = TextAnnotation::annotate($text, $confidence);
+    }
+    Flight::json($result);
+});
+
+/**
+ * Route to test the module 1, 2 and 3
+ */
+Flight::route('/search/extract/annotate/test', function () {
+    $result = array();
+    
+    if (isset(Flight::request()->query['q']))
+    {
+        $query = Flight::request()->query['q'];
+        $confidence = 1;
+        if (isset(Flight::request()->query['confidence']))
+        {
+            $confidence = Flight::request()->query['confidence'];
+        }
+        $resultOfModule1 = SearchEngineExtraction::getResultLinksOfQuery($query);
+        $allUrl = array_keys($resultOfModule1);
+        $resultOfModule2 = TextExtractor::getAllText($allUrl);
+        $result = TextAnnotation::annotateTexts($resultOfModule2, $confidence);
+    }
+    Flight::json($result);
 });
 
 /**
@@ -93,9 +133,7 @@ Flight::route('/enhance/dataConcept/test', function () {
 });
 
 Flight::route('/similarity/test', function () {
-    echo '<pre>';
-    var_dump(GraphSimilarity::getConnectedComponentsJSONTest());
-    echo '</pre>';
+    Flight::json(GraphSimilarity::getConnectedComponentsJSONTest());
 });
 
 Flight::route('/gfaim/test', function () {

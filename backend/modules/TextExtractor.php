@@ -84,7 +84,12 @@ class TextExtractor
 
         $text = '';
         $xpath = new DOMXPath($dom);
-        $nodeList = $xpath->query('//div/text()|//h1/text()|//h2/text()|//h3/text()|//span/text()|//p/text()');
+        /* Optimisation
+        $nodeList = $xpath->query('//div[not(ancestor::nav)]/text()|//h1[not(ancestor::nav)]/text()|
+        //h2[not(ancestor::nav)]/text()|//h3[not(ancestor::nav)]/text()|//span[not(ancestor::nav)]/text()|
+        //p[not(ancestor::nav)]/text()|//li[not(ancestor::nav)]/text()'); */
+        // Original
+        $nodeList = $xpath->query('//div/text()|//h1/text()|//h2/text()|//h3/text()|//span/text()|//p/text()|//li/text()');
 
         $toReplace   = array("\r\n", "\n", "\r");
 
@@ -102,7 +107,6 @@ class TextExtractor
                     $text .= '. ';
                 }
             }
-
         }
         return $text;
     }

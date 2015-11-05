@@ -49,6 +49,7 @@ const GENERAL_INFO_IMAGECAPTION = 'http://dbpedia.org/property/imageCaption';
 const GENERAL_INFO_THUMBNAIL = 'http://dbpedia.org/ontology/thumbnail';
 const GENERAL_INFO_PRIMARYTOPIC = 'http://xmlns.com/foaf/0.1/isPrimaryTopicOf';
 
+const PROPERTY_GENUS = 'http://dbpedia.org/ontology/genus';
 
 /**
  * Graph
