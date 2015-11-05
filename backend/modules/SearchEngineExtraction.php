@@ -27,8 +27,9 @@ class SearchEngineExtraction
             }
         }
         
-        $nbMaxResultsByRequest = $nbMaxResults / 2;
-
+        $nbMaxResultsRecipes = ($nbMaxResults > 10) ? 10 : $nbMaxResults;
+        $nbMaxResultsFood = ($nbMaxResults > 10) ? $nbMaxResults - 10 : 0;
+        
         $links = array();
 
         $googleResultsRecipes = Utils::CallAPI('GET', SEARCH_ENGINE_URL, array(
@@ -37,21 +38,23 @@ class SearchEngineExtraction
             'q' => 'recipes '.$query,
             'safe' => 'high',
             'lr' => 'lang_en',
-            'num' => $nbMaxResultsByRequest
+            'num' => $nbMaxResultsRecipes
         ));
 
         $googleResultsJSONRecipes = json_decode($googleResultsRecipes, true);
-
-        $googleResultsFood = Utils::CallAPI('GET', SEARCH_ENGINE_URL, array(
-            'key' => SEARCH_ENGINE_KEYS_FOOD[$APIKeyNumber],
-            'cx' => GOOGLE_SEARCH_CX,
-            'q' => 'food '.$query,
-            'safe' => 'high',
-            'lr' => 'lang_en',
-            'num' => $nbMaxResultsByRequest
-        ));
-
-        $googleResultsJSONFood = json_decode($googleResultsFood, true);
+        
+        if ($nbMaxResultsFood > 0) {
+            $googleResultsFood = Utils::CallAPI('GET', SEARCH_ENGINE_URL, array(
+                'key' => SEARCH_ENGINE_KEYS_FOOD[$APIKeyNumber],
+                'cx' => GOOGLE_SEARCH_CX,
+                'q' => 'food '.$query,
+                'safe' => 'high',
+                'lr' => 'lang_en',
+                'num' => $nbMaxResultsFood
+            ));
+    
+            $googleResultsJSONFood = json_decode($googleResultsFood, true);
+        }
         
         if (!isset($googleResultsJSONRecipes['items']))
         {
@@ -73,12 +76,14 @@ class SearchEngineExtraction
             ); 
         }
         
-        foreach ($googleResultsJSONFood['items'] as $item)
-        {
-            $links[$item['link']] = array(
-                'title' => $item['title'],
-                'description' => $item['snippet']
-            ); 
+        if ($nbMaxResultsFood > 0) {
+            foreach ($googleResultsJSONFood['items'] as $item)
+            {
+                $links[$item['link']] = array(
+                    'title' => $item['title'],
+                    'description' => $item['snippet']
+                ); 
+            }
         }
         
         if ($nbMaxResults == DEFAULT_NUMBER_OF_PAGES) {
