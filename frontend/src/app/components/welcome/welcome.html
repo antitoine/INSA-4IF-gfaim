@@ -9,19 +9,22 @@
 
                     <form>
                         <div class="input-group">
-                            <input autofocus="autofocus" ng-model='query' placeholder="ex: Tomato Soup" type="text" id="search"
+                            <input autofocus="autofocus" ng-model='query' placeholder="ex: Tomato Soup" type="text"
+                                   id="search"
                                    class="form-control">
                             <span class="input-group-btn">
-                         <button ng-click="search()" class="btn btn-default" >Search</button>
+                         <button ng-click="search()" class="btn btn-default">Search</button>
                     </span>
 
                         </div>
                     </form>
                     <p style="margin-top:15px">
-                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#optionsPanel" aria-expanded="false" aria-controls="optionsPanel">
-                        Recherche avancée
-                    </button>
-                        <a href="#" ng-click="cancelRequest()" ng-show="isSearching" class="btn btn-primary" type="button" >
+                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#optionsPanel"
+                                aria-expanded="false" aria-controls="optionsPanel">
+                            Recherche avancée
+                        </button>
+                        <a href="#" ng-click="cancelRequest()" ng-show="isSearching" class="btn btn-primary"
+                           type="button">
                             Cancel Search
                         </a>
                     </p>
@@ -34,6 +37,7 @@
     <div class="collapse" id="optionsPanel">
         <div class="well">
             <h3>Options</h3>
+
             <div class="row">
                 <div class="col-md-2">
                     <p>
@@ -41,12 +45,12 @@
                     </p>
                 </div>
                 <div class="col-md-2">
-                        <slider ng-model="sliders.similarity.sliderValue"
-                                min="sliders.similarity.min"
-                                step="sliders.similarity.step"
-                                max="sliders.similarity.max"
-                                value="sliders.similarity.value">
-                        </slider>
+                    <slider ng-model="sliders.similarity.sliderValue"
+                            min="sliders.similarity.min"
+                            step="sliders.similarity.step"
+                            max="sliders.similarity.max"
+                            value="sliders.similarity.value">
+                    </slider>
                 </div>
             </div>
             <div class="row">
@@ -75,18 +79,20 @@
     </section>
 
     <section style="text-align: center" ng-show="searchingInProcess">
-        <h1 >{{loadingText}}</h1>
+        <h1>{{loadingText}}</h1>
+
         <p>{{loadingSubText}}</p>
         <svg height="400" width="400" id="preloader">
             <g filter="url(#goo)">
-                <circle class="outer" cx="200" cy="200" r="150" />
+                <circle class="outer" cx="200" cy="200" r="150"/>
                 <circle class="drop" cx="200" cy="200" r="15">
             </g>
 
             <defs>
                 <filter id="goo">
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
-                    <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo" />
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur"/>
+                    <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
+                                   result="goo"/>
                 </filter>
             </defs>
         </svg>
@@ -105,37 +111,49 @@
         </div>
 
         <div ng-show="searchingDone" ng-repeat="element in results">
-                <search-result title={{element.mainConcept.name}}
-                               img={{element.mainConcept.image}}
-                               caption={{element.mainConcept.imageCaption}}
-                               wiki={{element.mainConcept.wikipediaUrl}}
-                               main-description={{element.mainConcept.description}} >
-                    <div ng-repeat="link in element.externLinks">
-                        <h4><a target="_blank" href={{link.url}}>{{link.title}}</a></h4>
-                        <p>{{link.description}}</p>
+            <search-result title={{element.mainConcept.name}}
+                           img={{element.mainConcept.image}}
+                           caption={{element.mainConcept.imageCaption}}
+                           wiki={{element.mainConcept.wikipediaUrl}}
+                           main-description={{element.mainConcept.description}}>
+                <div ng-repeat="link in element.externLinks">
+                    <h4><a target="_blank" href={{link.url}}>{{link.title}}</a></h4>
+
+                    <p>{{link.description}}</p>
+                </div>
+
+                <hr>
+
+                <div class="row">
+                    <div ng-repeat="recipie in element.mainConcept.recipies" class="col-sm-2 img-recipies">
+                        <img class="img-responsive img-box-recipies"
+                             actual-src={{recipie.image}}
+                             ng-src="http://a4.mzstatic.com/us/r30/Purple3/v4/1f/57/ef/1f57ef5a-23ad-f54d-f93a-63b813ea94ca/icon256.png" >
+                        <p style="text-align:center"><a target="_blank" href={{recipie.wikipediaUrl}}>{{recipie.name | limitTo : 20}}</a></p>
                     </div>
-                    <hr>
-                    <div class="row">
-                        <div class="container" ng-repeat="link in element.externLinks">
-                            <button type="button" class="btn btn-info btn-xs btn-disabled">
-                                {{link.title}}</button>
-                        </div>
-                    </div>
-                </search-result>
-            </div>
+                </div>
+                <hr>
+                <div class="row">
+                            <span ng-repeat="tag in element.tags" style="padding: 5px; margin: 3px; display: inline-block;"
+                                  class="btn-info btn-xs">
+                                {{tag}}
+                            </span>
+            </search-result>
+        </div>
     </section>
 
 
-
     <!-- Modal -->
-    <div style="display: none" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div style="display: none" class="modal fade" id="myModal" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel">
         <div class="modal-dialog" style="width: 1024px" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="myModalLabel">Graph</h4>
                 </div>
-                <div class="modal-body" >
+                <div class="modal-body">
                     <div id="network" ng-show="isSearching" class="container" style="height: 600px;width: 1000px">
                         <vis-network network="network" on-select="onNodeSelect" id="container-network">
                         </vis-network>
