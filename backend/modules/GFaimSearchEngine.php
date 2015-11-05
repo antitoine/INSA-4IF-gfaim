@@ -157,9 +157,9 @@ class GFaimSearchEngine {
      *          - title
      *          - description
      */
-    public static function search($query, $confidence = SPOTLIGHT_DEFAULT_CONFIDENCE, $similarity = GRAPH_DEFAULT_SIMILARITY) {
+    public static function search($query, $confidence = SPOTLIGHT_DEFAULT_CONFIDENCE, $similarity = GRAPH_DEFAULT_SIMILARITY, $nbMaxResults = DEFAULT_NUMBER_OF_PAGES) {
 
-        $googleResults = SearchEngineExtraction::getResultLinksOfQuery($query);
+        $googleResults = SearchEngineExtraction::getResultLinksOfQuery($query, $nbMaxResults);
 
         $annotatedUrls = TextAnnotation::annotateTexts(
                             TextExtractor::getAllText(

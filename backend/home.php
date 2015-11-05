@@ -32,6 +32,10 @@
                             <label for="similarityGfaim">Confidence</label>
                             <input id="similarityGfaim" type="number" name="similarity" value="1.5"/>
                         </div>
+                        <div class="form-group">
+                            <label for="numberOfPagesGfaim">Number of pages</label>
+                            <input id="numberOfPagesGfaim" type="number" name="nb" value="10"/>
+                        </div>
                         <button class="btn btn-default" type="submit">Submit</button>
                     </form>
                 </div>
@@ -45,6 +49,10 @@
                             <div class="form-group">
                                 <label for="queryModule1">Query to search on google</label>
                                 <input id="queryModule1" type="text" name="q"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="numberOfPagesModule1">Number of pages</label>
+                                <input id="numberOfPagesModule1" type="number" name="nb" value="10"/>
                             </div>
                             <button class="btn btn-default" type="submit">Submit</button>
                         </form>
@@ -105,6 +113,10 @@
                                 <label for="queryModule1And2">Query to search</label>
                                 <input id="queryModule1And2" type="text" name="q"/>
                             </div>
+                            <div class="form-group">
+                                <label for="numberOfPagesModule1And2">Number of pages</label>
+                                <input id="numberOfPagesModule1And2" type="number" name="nb" value="10"/>
+                            </div>
                             <button class="btn btn-default" type="submit">Submit</button>
                         </form>
                     </div>
@@ -121,6 +133,10 @@
                                 <label for="confidenceModule1And2And3">Confidence</label>
                                 <input id="confidenceModule1And2And3" type="number" name="confidence" value="1"/>
                             </div>
+                            <div class="form-group">
+                                    <label for="numberOfPagesModule1And2And3">Number of pages</label>
+                                    <input id="numberOfPagesModule1And2And3" type="number" name="nb" value="10"/>
+                            </div>
                             <button class="btn btn-default" type="submit">Submit</button>
                         </form>
                     </div>
@@ -136,6 +152,10 @@
                             <div class="form-group">
                                 <label for="confidenceModule1And2And3And4">Confidence</label>
                                 <input id="confidenceModule1And2And3And4" type="number" name="confidence" value="1"/>
+                            </div>
+                            <div class="form-group">
+                                    <label for="numberOfPagesModule1And2And3And4">Number of pages</label>
+                                    <input id="numberOfPagesModule1And2And3And4" type="number" name="nb" value="10"/>
                             </div>
                             <button class="btn btn-default" type="submit">Submit</button>
                         </form>

@@ -262,7 +262,7 @@ class Graph
 			$nodes[] = array(
 				'id' => $this->nodesId[$currentNode],
 				'title' => $currentNode,
-				'label' => 'url'
+				'label' => parse_url($currentNode, PHP_URL_HOST)
 			);
 		}
 		

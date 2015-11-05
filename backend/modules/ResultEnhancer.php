@@ -34,36 +34,6 @@ class ResultEnhancer {
                 "&timeout=".self::TIMEOUT;
     }
 
-    /**
-     * @brief Executes a SPARQL query using 
-     * @param string $sparqlQuery
-     *      SPARQL query to execute
-     * @return Query response with the format specified using SPARQL_RESULT_FORMAT
-     */
-    private static function execSPARQLQuery( $sparqlQuery ) {
-
-        // Generate the file name with a unique id
-        //$uniquId = uniqid();
-        //$sparqlFileName = self::SPARQL_QUERY_FILEPATH . $uniquId;
-
-        // Writes the given query in the file
-        file_put_contents(self::SPARQL_QUERY_FILEPATH, $sparqlQuery);
-        // Execute SPARQL query
-        $cmd = self::RSPARQL_PATH."rsparql --service ".self::SPARQL_ENDPOINT." --query ".self::SPARQL_QUERY_FILEPATH." --results ".self::SPARQL_RESULT_FORMAT;
-
-        $results = array();
-
-        if (exec($cmd, $results)) {
-            $results = implode($results);;
-        } else {
-            $results = false;
-        }
-
-        //unlink($sparqlFileName);
-
-        return $results;
-    }
-
     // Fonction creation de requete 
     private static function getTriplesLinkedToURI($uri) {
         return "SELECT ?s ?p ?o WHERE { ?s ?p ?o.
@@ -82,18 +52,6 @@ class ResultEnhancer {
         
         return "SELECT ?s ?p ?o WHERE { " . $predicatesFilter . " } ";
     }
-    
-    /*
-    private static function requestAllTriplesGenus($uriGenus) {
-        return 'SELECT ?s ?p ?o WHERE { ?s ?p ?o. FILTER (?p in (<' . PROPERTY_GENUS . '>) && ?o in (<'. $uriGenus .'>)) }';
-    }*/
-
-    /*    
-    private static function requestAllTriplesNoFilter($uri, $predicates) {
-        $predicatesFilter = self::getPredicatesListFilter($uri, array(), $predicates);
-        
-        return "SELECT ?s ?p ?o WHERE { " . $predicatesFilter . " } ";
-    }*/
     
     private static function formatTripleFromPredicate($triple, $p) {
         return "&lt;" . $triple->s->value . "&gt; &lt;" . $p . "&gt; &lt;" . $triple->o->value . "&gt; <br/>";
@@ -163,10 +121,8 @@ class ResultEnhancer {
     
     // Returns an array of all triples found for a predicate on a uri
     private static function getTripleFromPredicate($uri, $predicate) {
-        /* Deprecated
         $query = self::buildHTTPRequest(self::requestTripleFromPredicate($uri, $predicate));
-        $response = file_get_contents($query);*/
-        $response = self::execSPARQLQuery(self::requestTripleFromPredicate($uri, $predicate));
+        $response = file_get_contents($query);
         $triples = self::constructTriplesFromPredicate($response, $predicate);
         return $triples;
     }
@@ -206,35 +162,11 @@ class ResultEnhancer {
     }
     
     private static function getAllTriplesGenus($uriGenus) {
-        //SPARQL request choice
-        $remote = true;
-        if($remote) {
-            // Remote version - fast
-            $query = self::buildHTTPRequest(self::requestAllTriplesGenus($uriGenus));
-            $response = file_get_contents($query);
-        } else {
-            // Local SPARQL version - slow
-            $response = self::execSPARQLQuery(self::requestAllTriplesGenus($uriGenus));
-        }
-        
+
+        $query = self::buildHTTPRequest(self::requestAllTriplesGenus($uriGenus));
+        $response = file_get_contents($query);
+
         $triples = self::constructAllTriples($response);
-        return $triples;
-    }
-    
-    // Returns an array of all triples found for a predicate on a uri without language filters
-    private static function getAllTriplesNoFilter($uri, $predicates) {
-        /* Deprecated
-        $query = self::buildHTTPRequest(self::requestAllTriplesNoFilter($uri));
-        $response = file_get_contents($query); */
-        
-        var_dump($predicates);
-        
-        $response = self::execSPARQLQuery(self::requestAllTriplesNoFilter($uri, $predicates));
-        
-        $triples = self::constructAllTriples($response);
-        
-        
-        
         return $triples;
     }
     
@@ -271,22 +203,8 @@ class ResultEnhancer {
             $allTriples = array(); 
             // Foreach uri in the array  
             foreach($uris as $word => $uri) {
-                /*// Foreach predicate to find
-                foreach($requiredPredicates as $predicate) {
-                    $triples = self::getTripleFromPredicate($uri, $predicate);
-                    if(!empty($triples)) {
-                        $allTriples = array_merge($allTriples, $triples);
-                    }
-                }*/
-                
                 if (!isset($uriTriples[$uri])) {
                     $triples = self::getAllTriples($uri, $englishPredicates, $predicatesNoLang);
-                    
-                    /*$triples = self::getAllTriples($uri, $englishPredicates);
-                    
-                    $triplesNoLang = self::getAllTriplesNoFilter($uri, $predicatesNoLang);
-                    
-                    $triples = array_merge($triples, $triplesNoLang);*/
                     
                     if(!empty($triples)) {
                         $uriTriples[$uri] = $triples;

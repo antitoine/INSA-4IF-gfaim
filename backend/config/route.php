@@ -19,6 +19,7 @@ Flight::route('/search', function(){
     {
         $confidence = SPOTLIGHT_DEFAULT_CONFIDENCE;
         $similarity = GRAPH_DEFAULT_SIMILARITY;
+        $numberOfPages = DEFAULT_NUMBER_OF_PAGES;
         $query = Flight::request()->query['q'];
 
         if (isset(Flight::request()->query['confidence']))
@@ -31,7 +32,12 @@ Flight::route('/search', function(){
             $similarity = Flight::request()->query['similarity'];
         }
 
-        $result = GFaimSearchEngine::search($query, $confidence, $similarity);
+        if (isset(Flight::request()->query['nb']))
+        {
+            $numberOfPages = Flight::request()->query['nb'];
+        }
+
+        $result = GFaimSearchEngine::search($query, $confidence, $similarity, $numberOfPages);
     }
     Flight::json($result);
 });
@@ -41,11 +47,18 @@ Flight::route('/search', function(){
  */
 Flight::route('/search/test', function(){
     $result = array();
-    
+
     if (isset(Flight::request()->query['q']))
     {
         $query = Flight::request()->query['q'];
-        $result = SearchEngineExtraction::getResultLinksOfQuery($query);
+        
+        $numberOfPages = DEFAULT_NUMBER_OF_PAGES;
+        if (isset(Flight::request()->query['nb']))
+        {
+            $numberOfPages = Flight::request()->query['nb'];
+        }
+        
+        $result = SearchEngineExtraction::getResultLinksOfQuery($query, $numberOfPages);
     }
     
     Flight::json($result);
@@ -74,7 +87,15 @@ Flight::route('/search/extract/test', function () {
     if (isset(Flight::request()->query['q']))
     {
         $query = Flight::request()->query['q'];
-        $resultOfModule1 = SearchEngineExtraction::getResultLinksOfQuery($query);
+
+        $numberOfPages = DEFAULT_NUMBER_OF_PAGES;
+        if (isset(Flight::request()->query['nb']))
+        {
+            $numberOfPages = Flight::request()->query['nb'];
+        }
+
+        $resultOfModule1 = SearchEngineExtraction::getResultLinksOfQuery($query, $numberOfPages);
+
         $allUrl = array_keys($resultOfModule1);
         $result = TextExtractor::getAllText($allUrl);
     }
@@ -114,7 +135,12 @@ Flight::route('/search/extract/annotate/test', function () {
         {
             $confidence = Flight::request()->query['confidence'];
         }
-        $resultOfModule1 = SearchEngineExtraction::getResultLinksOfQuery($query);
+        $numberOfPages = DEFAULT_NUMBER_OF_PAGES;
+        if (isset(Flight::request()->query['nb']))
+        {
+            $numberOfPages = Flight::request()->query['nb'];
+        }
+        $resultOfModule1 = SearchEngineExtraction::getResultLinksOfQuery($query, $numberOfPages);
         $allUrl = array_keys($resultOfModule1);
         $resultOfModule2 = TextExtractor::getAllText($allUrl);
         $result = TextAnnotation::annotateTexts($resultOfModule2, $confidence);
@@ -136,7 +162,12 @@ Flight::route('/search/extract/annotate/enhance/test', function () {
         {
             $confidence = Flight::request()->query['confidence'];
         }
-        $resultOfModule1 = SearchEngineExtraction::getResultLinksOfQuery($query);
+        $numberOfPages = DEFAULT_NUMBER_OF_PAGES;
+        if (isset(Flight::request()->query['nb']))
+        {
+            $numberOfPages = Flight::request()->query['nb'];
+        }
+        $resultOfModule1 = SearchEngineExtraction::getResultLinksOfQuery($query, $numberOfPages);
         $allUrl = array_keys($resultOfModule1);
         $resultOfModule2 = TextExtractor::getAllText($allUrl);
         $annotatedUrls = TextAnnotation::annotateTexts($resultOfModule2, $confidence);
