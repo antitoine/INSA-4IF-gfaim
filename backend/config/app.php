@@ -47,6 +47,7 @@ const SPOTLIGHT_DEFAULT_CONFIDENCE = 1;
  */
 const CACHE_ENABLED = true;
 const DATABASE_ROOT = VAR_DIR . '/cache.sqlite3';
+const WAIT_TIME_UNLOCKED_DATABASE = 30;
 
 /**
  * SPARQL
