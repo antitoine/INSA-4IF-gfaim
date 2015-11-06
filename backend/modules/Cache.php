@@ -60,6 +60,7 @@ class Cache
         }
 
         $this->db->open(DATABASE_ROOT);
+        $this->db->busyTimeout(WAIT_TIME_UNLOCKED_DATABASE);
 
         $queryResult = array();
         $ret = $this->createIfNotExistsModuleOneTable();
@@ -98,6 +99,7 @@ class Cache
         }
 
         $this->db->open(DATABASE_ROOT);
+        $this->db->busyTimeout(WAIT_TIME_UNLOCKED_DATABASE);
 
         $textResult = null;
         $ret = $this->createIfNotExistsModuleOneTable();
@@ -156,6 +158,7 @@ class Cache
         }
 
         $this->db->open(DATABASE_ROOT);
+        $this->db->busyTimeout(WAIT_TIME_UNLOCKED_DATABASE);
 
         $textResult = null;
         
@@ -198,6 +201,7 @@ class Cache
         }
 
         $this->db->open(DATABASE_ROOT);
+        $this->db->busyTimeout(WAIT_TIME_UNLOCKED_DATABASE);
 
         $ret = $this->createIfNotExistsModuleTwoTable();
 
