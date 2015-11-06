@@ -55,7 +55,7 @@
                     </div>
                     <div class="col-md-2 col-md-offset-2">
                         <p>
-                            Number of pages: ({{sliders.nbPages.sliderValue}})
+                            Number of results: ({{sliders.nbPages.sliderValue}})
                         </p>
                     </div>
                     <div class="col-md-2">
@@ -131,7 +131,8 @@
                            img={{element.mainConcept.image}}
                            caption={{element.mainConcept.imageCaption}}
                            wiki={{element.mainConcept.wikipediaUrl}}
-                           main-description={{element.mainConcept.description}}>
+                           main-description={{element.mainConcept.description}}
+                           words={{query}}>
                 <div ng-repeat="link in element.externLinks">
                     <h4><a target="_blank" ng-href={{link.url}}>{{link.title}}</a></h4>
 

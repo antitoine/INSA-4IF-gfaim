@@ -106,6 +106,9 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
             if ($scope.query === undefined) {
                 return;
             }
+            if($scope.searchingInProcess){
+                window.location = '/';
+            }
             iterateSearch(3);
 
             $scope.loadingText = "Loading ...";
@@ -190,6 +193,7 @@ gfaimApp.controller('welcomeCtrl', ['$scope', 'searchService', '$log', '$state',
                 $scope.network.fit({animation: options});
             }, timeout);
         };
+
 
 
         /*      $scope.results =

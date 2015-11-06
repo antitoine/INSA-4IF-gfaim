@@ -8,9 +8,17 @@ gfaimApp.directive('searchResult', function () {
             img: '@',
             mainDescription: '@',
             wiki: '@',
-            caption:'@'
+            caption:'@',
+            words : '@'
         },
-        link: function (scope, element, attrs) {},
+        link: function (scope, element, attrs) {
+
+            scope.$watch('img', function() {
+                var myHilitor = new Hilitor('result');
+                myHilitor.apply(scope.words);
+            });
+
+        },
         controller: function ($scope) {}
     };
 });
