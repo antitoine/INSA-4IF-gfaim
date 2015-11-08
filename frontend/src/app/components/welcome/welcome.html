@@ -9,11 +9,13 @@
 
                     <form>
                         <div class="input-group">
-                            <input autofocus="autofocus" ng-model='query' placeholder="ex: Tomato Soup" type="text"
+                            <input autofocus="autofocus" ng-model='query' placeholder="ex: Salad with onions" type="text"
                                    id="search"
                                    class="form-control">
                             <span class="input-group-btn">
-                         <button ng-click="search()" class="btn btn-default">Search</button>
+                         <button ng-hide="searchingInProcess" ng-click="search()" class="btn btn-default">Search</button>
+                         <a ng-show="searchingInProcess" ng-href="#"  ng-click="cancelRequest()" class="btn btn-info">Cancel</a>
+
                     </span>
 
                         </div>
@@ -23,10 +25,6 @@
                                 aria-expanded="false" aria-controls="optionsPanel">
                             Advanced Options
                         </button>
-                        <a ng-href="#" ng-click="cancelRequest()" ng-show="isSearching" class="btn btn-primary"
-                           type="button">
-                            Cancel Search
-                        </a>
                     </p>
                 </div>
             </div>
